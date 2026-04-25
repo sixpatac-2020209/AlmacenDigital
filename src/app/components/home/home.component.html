@@ -1,0 +1,504 @@
+<!-- Carousel Section Next to Categories -->
+<div class="container-fluid" style="margin-top: 0px; position: relative; z-index: 999;">
+    <div class="row px-xl-5">
+        <div class="col-lg-3 d-none d-lg-block" style="height: 500px;"></div>
+        <div class="col-lg-9">
+            <div id="header-carousel" class="carousel slide" data-ride="carousel" style="border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img class="img-fluid" src="assets/img/carousel-1.jpg" alt="Promo de descuento" style="height: 400px; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                            <div class="p-3" style="max-width: 500px; animation: slideUp 0.5s ease;">
+                                <h4 class="text-light text-uppercase font-weight-medium mb-3" style="font-size: 14px; letter-spacing: 2px;">🎉 10% de Descuento en tu Primera Orden</h4>
+                                <h3 class="display-4 text-white font-weight-bold mb-4" style="font-size: 48px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Electrodoméstico Moderno</h3>
+                                <a routerLink="/shop" class="btn btn-light py-3 px-5" style="font-weight: 600; border-radius: 30px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255,255,255,0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,255,255,0.5)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255,255,255,0.3)';">Comprar Ahora</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img class="img-fluid" src="assets/img/carousel-2.jpg" alt="Promo de temporada" style="height: 400px; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                            <div class="p-3" style="max-width: 500px; animation: slideUp 0.5s ease;">
+                                <h4 class="text-light text-uppercase font-weight-medium mb-3" style="font-size: 14px; letter-spacing: 2px;">🎉 10% de Descuento en tu Primera Orden</h4>
+                                <h3 class="display-4 text-white font-weight-bold mb-4" style="font-size: 48px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Precio Razonable</h3>
+                                <a routerLink="/shop" class="btn btn-light py-3 px-5" style="font-weight: 600; border-radius: 30px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255,255,255,0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,255,255,0.5)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255,255,255,0.3)';">Comprar Ahora</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+                    <div class="btn btn-dark" style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); transition: all 0.3s;" onmouseover="this.style.background='rgba(0,0,0,0.9)'" onmouseout="this.style.background='rgba(0,0,0,0.6)'">
+                        <span class="carousel-control-prev-icon mb-n2"></span>
+                    </div>
+                </a>
+                <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+                    <div class="btn btn-dark" style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); transition: all 0.3s;" onmouseover="this.style.background='rgba(0,0,0,0.9)'" onmouseout="this.style.background='rgba(0,0,0,0.6)'">
+                        <span class="carousel-control-next-icon mb-n2"></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+</style>
+
+<!-- Featured Start -->
+    <div class="container-fluid pt-5" style="margin-top: 50px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 60px 0;">
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-4">
+                <div class="d-flex align-items-center feature-card" style="padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 30px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0,0,0,0.08)';">
+                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
+                        <i class="fa fa-check text-white" style="font-size: 28px;"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold m-0" style="color: #2d3436;">Producto de Calidad</h5>
+                        <small class="text-muted">Garantizado y certificado</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-4">
+                <div class="d-flex align-items-center feature-card" style="padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 30px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0,0,0,0.08)';">
+                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
+                        <i class="fa fa-shipping-fast text-white" style="font-size: 28px;"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold m-0" style="color: #2d3436;">Envío Gratis</h5>
+                        <small class="text-muted">En compras mayores a Q.100</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-4">
+                <div class="d-flex align-items-center feature-card" style="padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 30px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0,0,0,0.08)';">
+                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
+                        <i class="fas fa-exchange-alt text-white" style="font-size: 28px;"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold m-0" style="color: #2d3436;">Devolución en 14 Días</h5>
+                        <small class="text-muted">Sin preguntas</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-4">
+                <div class="d-flex align-items-center feature-card" style="padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 30px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0,0,0,0.08)';">
+                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
+                        <i class="fa fa-phone-volume text-white" style="font-size: 28px;"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold m-0" style="color: #2d3436;">Soporte 24/7</h5>
+                        <small class="text-muted">Atención dedicada</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Featured End -->
+
+
+    <!-- Categories Start -->
+    <div class="container-fluid pt-5 pb-5">
+        <div class="text-center mb-5">
+            <h2 style="font-size: 36px; font-weight: 700; color: #2d3436;">Explora por Categorías</h2>
+            <p style="color: #6c757d; font-size: 16px;">Encuentre exactamente lo que busca</p>
+        </div>
+        <div class="row px-xl-5">
+            <div class="col-lg-4 col-md-6 pb-4" *ngFor="let cat of [1,2,3,4,5,6]">
+                <div class="position-relative overflow-hidden rounded" style="background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 30px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.08)';">
+                    <div style="position: relative; overflow: hidden; height: 250px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <img class="img-fluid" src="assets/img/cat-{{cat}}.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3); transition: all 0.3s;" onmouseover="this.style.background='rgba(0,0,0,0.1)'" onmouseout="this.style.background='rgba(0,0,0,0.3)'"></div>
+                    </div>
+                    <div style="padding: 20px; text-align: center;">
+                        <small style="color: #007bff; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">15 Productos</small>
+                        <h5 class="font-weight-bold mt-2 mb-0" style="color: #2d3436; font-size: 18px;">Categoría {{cat}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Categories End -->
+
+
+    <!-- Offer Start -->
+    <div class="container-fluid offer pt-5">
+        <div class="row px-xl-5">
+            <div class="col-md-6 pb-4">
+                <div class="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5 offer-card">
+                    <img src="assets/img/offer-1.png" alt="" class="offer-image">
+                    <div class="offer-content">
+                        <h5 class="text-uppercase text-primary mb-3">20% de descuento en todo el pedido</h5>
+                        <h1 class="mb-4 font-weight-semi-bold">Colección de Verano</h1>
+                        <a routerLink="/shop" class="btn btn-outline-primary py-md-2 px-md-3">Comprar Ahora</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 pb-4">
+                <div class="position-relative bg-secondary text-center text-md-left text-white mb-2 py-5 px-5 offer-card">
+                    <img src="assets/img/offer-2.png" alt="" class="offer-image">
+                    <div class="offer-content">
+                        <h5 class="text-uppercase text-primary mb-3">20% de descuento en todo el pedido</h5>
+                        <h1 class="mb-4 font-weight-semi-bold">Colección de Invierno</h1>
+                        <a routerLink="/shop" class="btn btn-outline-primary py-md-2 px-md-3">Comprar Ahora</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Offer End -->
+
+    <!-- Ofertas Especiales Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Ofertas Especiales</span></h2>
+            <p class="text-muted">Promociones activas con tiempo limitado.</p>
+        </div>
+        <div class="row px-xl-5">
+            <div class="col-12" *ngIf="ofertas.length === 0">
+                <div class="alert alert-info text-center">No hay ofertas activas disponibles en este momento.</div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 pb-4" *ngFor="let oferta of ofertas">
+                <div class="offer-banner">
+                    <div class="offer-banner-image">
+                        <img *ngIf="oferta.imagen" [src]="oferta.imagen" [alt]="oferta.titulo" />
+                        <div *ngIf="!oferta.imagen" class="no-image">Sin imagen</div>
+                    </div>
+                    <div class="offer-banner-content">
+                        <span class="offer-pill">Oferta activa</span>
+                        <h3>{{ oferta.titulo }}</h3>
+                        <p>{{ oferta.descripcion }}</p>
+                        <div class="offer-dates">
+                            <small>Válida del {{ oferta.fechaInicio | date:'dd/MM/yyyy' }} al {{ oferta.fechaFin | date:'dd/MM/yyyy' }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Ofertas Especiales End -->
+
+
+    <!-- Products Start - Novedades -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Novedades</span></h2>
+            <p class="text-muted">Últimos productos agregados</p>
+        </div>
+        <div class="row px-xl-5 pb-3">
+            <div class="col-12" *ngIf="productosRecientes.length === 0">
+                <div class="alert alert-info text-center">No hay productos disponibles en este momento.</div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1" *ngFor="let producto of productosRecientes">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" [src]="producto.imagen || 'assets/img/product-placeholder.jpg'" [alt]="producto.nombre">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">{{ producto.nombre }}</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6 *ngIf="producto.precioOferta">Q{{ producto.precioOferta }}</h6>
+                            <h6 *ngIf="!producto.precioOferta">Q{{ producto.precio }}</h6>
+                            <h6 class="text-muted ml-2" *ngIf="producto.precioOferta"><del>Q{{ producto.precio }}</del></h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a [routerLink]="['/detail', producto.id]" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Ver Detalle</a>
+                        <button (click)="addToCart(producto)" class="btn btn-sm text-dark p-0" style="background: none; border: none;"><i class="fas fa-shopping-cart text-primary mr-1"></i>Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row px-xl-5 pb-3" *ngIf="productosRecientes.length > 0">
+            <div class="col-12 text-center">
+                <button (click)="goToShopWithRecent()" class="btn btn-primary py-2 px-4" style="border-radius: 25px; font-weight: 600;">
+                    <i class="fas fa-arrow-right mr-2"></i>Ver Más Novedades
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Products End -->
+
+
+    <!-- Suscribirse Start -->
+    <div class="container-fluid bg-secondary my-5">
+        <div class="row justify-content-md-center py-5 px-xl-5">
+            <div class="col-md-6 col-12 py-5">
+                <div class="text-center mb-2 pb-2">
+                    <h2 class="section-title px-5 mb-3"><span class="bg-secondary px-2">Mantente informado</span></h2>
+                    <p>Suscríbete para recibir ofertas exclusivas y novedades de productos cada semana.</p>
+                </div>
+                <form action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control border-white p-4" placeholder="Tu correo electrónico">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary px-4">Suscribirse</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Suscribirse End -->
+
+
+    <!-- Products Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Novedades</span></h2>
+        </div>
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="assets/img/product-1.jpg" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Batidora de mano</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>Q.123.00</h6><h6 class="text-muted ml-2"><del>Q.123.00</del></h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Ver detalle</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Agregar al carrito</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="assets/img/product-2.jpg" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Olla a presión</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>Q.159.00</h6><h6 class="text-muted ml-2"><del>Q.179.00</del></h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Ver detalle</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Agregar al carrito</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="assets/img/product-3.jpg" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Tostadora rápida</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>Q.89.00</h6><h6 class="text-muted ml-2"><del>Q.99.00</del></h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Ver detalle</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Agregar al carrito</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="assets/img/product-4.jpg" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Set de utensilios</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>Q.75.00</h6><h6 class="text-muted ml-2"><del>Q.80.00</del></h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Ver detalle</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Agregar al carrito</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="assets/img/product-5.jpg" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Producto destacado</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Ver detalle</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Agregar al carrito</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="assets/img/product-6.jpg" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Producto destacado</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Ver detalle</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Agregar al carrito</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="assets/img/product-7.jpg" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Producto destacado</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Ver detalle</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Agregar al carrito</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="assets/img/product-8.jpg" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Producto destacado</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Ver detalle</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Agregar al carrito</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Products End -->
+
+
+    <!-- Vendor Start -->
+    <div class="container-fluid py-5">
+        <div class="row px-xl-5">
+            <div class="col">
+                <div class="owl-carousel vendor-carousel">
+                    <div class="vendor-item border p-4">
+                        <img src="assets/img/vendor-1.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="assets/img/vendor-2.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="assets/img/vendor-3.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="assets/img/vendor-4.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="assets/img/vendor-5.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="assets/img/vendor-6.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="assets/img/vendor-7.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="assets/img/vendor-8.jpg" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Vendor End -->
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
+        <div class="row px-xl-5 pt-5">
+            <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+                <a href="" class="text-decoration-none">
+                    <img src="assets/img/AlmacenDigitalLogo.png" alt="Almacén Digital" style="height: 80px; width: auto;">
+                </a>
+                <p>Encuentra productos confiables y modernos para tu hogar con envíos rápidos y atención personalizada.</p>
+                <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>Calle Principal 123, Ciudad Guatemala</p>
+                <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>contacto&#64;almacendigital.com</p>
+                <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+502 1234 5678</p>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="row">
+                    <div class="col-md-4 mb-5">
+                        <h5 class="font-weight-bold text-dark mb-4">Enlaces rápidos</h5>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Inicio</a>
+                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Nuestra tienda</a>
+                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>Detalle del producto</a>
+                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Carrito</a>
+                            <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Pago</a>
+                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Contacto</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <h5 class="font-weight-bold text-dark mb-4">Enlaces rápidos</h5>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Inicio</a>
+                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Nuestra tienda</a>
+                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>Detalle del producto</a>
+                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Carrito</a>
+                            <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Pago</a>
+                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Contacto</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <h5 class="font-weight-bold text-dark mb-4">Boletín</h5>
+                        <form action="">
+                            <div class="form-group">
+                                <input type="text" class="form-control border-0 py-4" placeholder="Tu nombre" required="required" />
+                            </div>
+                            <div class="form-group">
+                                <input type="email" class="form-control border-0 py-4" placeholder="Tu correo electrónico"
+                                    required="required" />
+                            </div>
+                            <div>
+                                <button class="btn btn-primary btn-block border-0 py-3" type="submit">Suscribirse</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row border-top border-light mx-xl-5 py-4">
+            <div class="col-md-6 px-xl-0">
+                <p class="mb-md-0 text-center text-md-left text-dark">
+                    &copy; <a class="text-dark font-weight-semi-bold" href="#">Almacén Digital</a>. Todos los derechos reservados. 
+					
+					<!--/*** The author’s attribution link must remain intact in the template. ***/-->
+                    <!--/*** If you wish to remove this credit link, please purchase the Pro Version . ***/-->
+                    Diseñado por <a class="text-dark font-weight-semi-bold" href="https://htmlcodex.com">HTML Codex</a>
+                </p>
+            </div>
+            <div class="col-md-6 px-xl-0 text-center text-md-right">
+                <img class="img-fluid" src="assets/img/payments.png" alt="">
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>

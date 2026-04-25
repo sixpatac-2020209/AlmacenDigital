@@ -1,0 +1,104 @@
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 150px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Carrito de Compras</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a routerLink="/">Inicio</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Carrito</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Cart Start -->
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5" *ngIf="carrito.length > 0; else emptyCart">
+        <div class="col-lg-8 mb-5">
+            <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                <div style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; padding: 25px; font-weight: 600; font-size: 18px;">
+                    <i class="fa fa-shopping-cart mr-2"></i> {{ carrito.length }} Producto(s) en tu carrito
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" style="padding-top: 0;">
+                        <thead style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                            <tr>
+                                <th style="padding: 20px; color: #2d3436; font-weight: 700;">Producto</th>
+                                <th style="padding: 20px; color: #2d3436; font-weight: 700; text-align: center;">Precio</th>
+                                <th style="padding: 20px; color: #2d3436; font-weight: 700; text-align: center;">Cantidad</th>
+                                <th style="padding: 20px; color: #2d3436; font-weight: 700; text-align: center;">Total</th>
+                                <th style="padding: 20px; color: #2d3436; font-weight: 700; text-align: center;">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of carrito" style="border-bottom: 1px solid #e9ecef; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='white'">
+                                <td style="padding: 20px;">
+                                    <div class="d-flex align-items-center">
+                                        <img [src]="item.imagen" alt="" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px; margin-right: 15px;">
+                                        <div>
+                                            <h6 class="mb-1" style="font-weight: 600; color: #2d3436;">{{ item.nombre }}</h6>
+                                            <small class="text-muted">ID: {{ item.id }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding: 20px; text-align: center; color: #007bff; font-weight: 600;">Q.{{ item.precio | number:'1.2-2' }}</td>
+                                <td style="padding: 20px; text-align: center;">
+                                    <div class="d-flex justify-content-center">
+                                        <button class="btn btn-sm btn-outline-primary" (click)="decrease(item.id)" style="width: 35px; height: 35px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                            <i class="fa fa-minus" style="font-size: 12px;"></i>
+                                        </button>
+                                        <input type="text" class="form-control form-control-sm" [value]="item.cantidad" readonly style="width: 50px; margin: 0 8px; text-align: center; border-radius: 5px; border: 1px solid #dee2e6;">
+                                        <button class="btn btn-sm btn-outline-primary" (click)="increase(item.id)" style="width: 35px; height: 35px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                            <i class="fa fa-plus" style="font-size: 12px;"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td style="padding: 20px; text-align: center; color: #28a745; font-weight: 700; font-size: 16px;">Q.{{ (item.precio * item.cantidad) | number:'1.2-2' }}</td>
+                                <td style="padding: 20px; text-align: center;">
+                                    <button class="btn btn-sm btn-outline-danger" (click)="remove(item.id)" style="width: 35px; height: 35px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#dc3545'; this.style.color='white';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#dc3545';">
+                                        <i class="fa fa-trash" style="font-size: 14px;"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-left: 4px solid #007bff;" class="mb-5">
+                <div style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; padding: 20px; font-weight: 600; font-size: 18px;">
+                    <i class="fa fa-receipt mr-2"></i> Resumen
+                </div>
+                <div style="padding: 25px;">
+                    <div class="d-flex justify-content-between mb-3" style="padding-bottom: 15px; border-bottom: 1px solid #e9ecef;">
+                        <h6 style="color: #6c757d; font-weight: 600;">Subtotal</h6>
+                        <h6 style="color: #2d3436; font-weight: 700;">Q.{{ getTotal() | number:'1.2-2' }}</h6>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4">
+                        <h6 style="color: #6c757d; font-weight: 600;">Envío</h6>
+                        <h6 style="color: #2d3436; font-weight: 700;">Q.{{ getShippingCost() | number:'1.2-2' }}</h6>
+                    </div>
+                    <div class="d-flex justify-content-between" style="padding-top: 15px; border-top: 2px solid #007bff; margin-bottom: 25px;">
+                        <h5 style="color: #2d3436; font-weight: 700; font-size: 18px;">Total</h5>
+                        <h5 style="color: #007bff; font-weight: 700; font-size: 20px;">Q.{{ getGrandTotal() | number:'1.2-2' }}</h5>
+                    </div>
+                    <button class="btn btn-block btn-primary py-3 mb-2" [routerLink]="'/checkout'" style="font-weight: 600; border-radius: 8px; font-size: 16px; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,123,255,0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"><i class="fa fa-lock mr-2"></i>Proceder al pago</button>
+                    <button class="btn btn-block btn-outline-secondary py-2 mb-2" [routerLink]="'/shop'" style="font-weight: 600; border-radius: 8px;"><i class="fa fa-shopping-bag mr-2"></i>Seguir comprando</button>
+                    <button class="btn btn-block btn-outline-danger py-2" (click)="clearCart()" style="font-weight: 600; border-radius: 8px;"><i class="fa fa-trash mr-2"></i>Vaciar carrito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #emptyCart>
+        <div class="row px-xl-5">
+            <div class="col-12 text-center py-5" style="padding: 60px 20px;">
+                <div style="font-size: 80px; color: #dee2e6; margin-bottom: 20px;"><i class="fa fa-shopping-cart"></i></div>
+                <h2 style="color: #2d3436; font-weight: 700; margin-bottom: 15px;">Tu carrito está vacío</h2>
+                <p style="color: #6c757d; font-size: 16px; margin-bottom: 30px;">¡Agrega productos para comenzar tu compra!</p>
+                <button class="btn btn-primary btn-lg" [routerLink]="'/shop'" style="padding: 12px 40px; font-weight: 600; border-radius: 8px;"><i class="fa fa-shopping-bag mr-2"></i>Ir a la tienda</button>
+            </div>
+        </div>
+    </ng-template>
+</div>
+<!-- Cart End -->

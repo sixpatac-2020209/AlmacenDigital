@@ -1,0 +1,156 @@
+/* Make dropdown extend lower only in home page */
+::ng-deep #navbar-vertical {
+  max-height: 500px !important;
+  overflow-y: auto !important;
+}
+
+/* Ensure carousel is properly positioned */
+.carousel-section {
+  position: relative;
+  z-index: 999;
+}
+
+.feature-card {
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: all 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+.offer-card {
+  min-height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.offer-card .offer-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: auto;
+  max-width: 420px;
+  object-fit: contain;
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.offer-card .offer-content {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 767px) {
+  .offer-card {
+    min-height: 280px;
+  }
+  .offer-card .offer-image {
+    max-width: 320px;
+  }
+}
+
+.offer-banner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.offer-banner:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 36px rgba(0,0,0,0.14);
+}
+
+.offer-banner-image {
+  width: 100%;
+  min-height: 220px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.offer-banner-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.offer-banner-content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.offer-pill {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: #007bff;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.offer-banner-content h3 {
+  font-size: 22px;
+  margin-bottom: 12px;
+  color: #2d3436;
+}
+
+/* Home product cards should match the store card dimensions */
+.card.product-item {
+  height: 325px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card.product-item .product-img {
+  height: 170px;
+}
+
+.card.product-item .product-img img {
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.offer-banner-content p {
+  color: #6c757d;
+  flex: 1;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.offer-dates small {
+  color: #6c757d;
+}
+
+.no-image {
+  width: 100%;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-size: 14px;
+  background: #e9ecef;
+}

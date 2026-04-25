@@ -1,0 +1,16 @@
+.topbar a.text-dark:hover {
+  color: #1f6fb2;
+}
+
+.navbar-nav .nav-link.active {
+  font-weight: 700;
+  color: #1f6fb2 !important;
+}
+
+form .form-control {
+  min-width: 220px;
+}
+
+.categories-btn {
+  font-weight: 600;
+}

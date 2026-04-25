@@ -1,0 +1,196 @@
+    <!-- Page Header Start -->
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 150px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Detalle del Producto</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a routerLink="/">Inicio</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Detalle del Producto</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Shop Detail Start -->
+    <div class="container-fluid py-5" *ngIf="product">
+        <div class="row px-xl-5">
+            <div class="col-lg-5 pb-5">
+                <div class="border-0 rounded-lg overflow-hidden position-relative" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+                    <!-- Carrusel de imágenes con sombra -->
+                    <div id="detail-carousel" class="carousel slide" data-ride="carousel" style="position: relative;">
+                        <div class="carousel-inner" style="border-radius: 10px; overflow: hidden;">
+                            <div class="carousel-item" *ngFor="let img of product.imagenes; let i = index" [class.active]="i === currentImageIndex" style="background: white;">
+                                <img class="w-100" style="height: 500px; object-fit: cover;" [src]="img" alt="{{ product.nombre }}">
+                            </div>
+                            <div class="carousel-item active" *ngIf="!product.imagenes || product.imagenes.length === 0" style="background: white;">
+                                <img class="w-100" style="height: 500px; object-fit: cover;" src="assets/img/no-image.png" alt="Sin imagen">
+                            </div>
+                        </div>
+                        <!-- Badge de descuento -->
+                        <div *ngIf="product.oferta && product.precioOferta && product.precioOferta > 0" style="position: absolute; top: 15px; right: 15px; background: #dc3545; color: white; padding: 8px 15px; border-radius: 25px; font-weight: bold; font-size: 13px; z-index: 10; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                            DESCUENTO
+                        </div>
+                    </div>
+                </div>
+                <!-- Navegación del carrusel mejorada -->
+                <div class="d-flex align-items-center justify-content-between mt-4">
+                    <button class="btn btn-outline-primary rounded-circle" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; transition: all 0.3s;" (click)="prevImage()" onmouseover="this.style.background='#007bff'; this.style.color='white';" onmouseout="this.style.background=''; this.style.color='#007bff';">
+                        <i class="fa fa-chevron-left"></i>
+                    </button>
+                    <div class="flex-grow-1 text-center" style="background: #f8f9fa; padding: 10px 15px; border-radius: 20px; color: #666; font-size: 12px; font-weight: 600; margin: 0 15px;">
+                        {{ currentImageIndex + 1 }} / {{ product.imagenes?.length || 1 }}
+                    </div>
+                    <button class="btn btn-outline-primary rounded-circle" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; transition: all 0.3s;" (click)="nextImage()" onmouseover="this.style.background='#007bff'; this.style.color='white';" onmouseout="this.style.background=''; this.style.color='#007bff';">
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-lg-6 pb-5" style="padding-left: 40px;">
+                <!-- Categoría como badge pequeño -->
+                <div class="mb-3">
+                    <span class="badge" style="background-color: #e9ecef; color: #495057; font-size: 11px; font-weight: 600; padding: 6px 12px; text-transform: uppercase; letter-spacing: 0.5px;">{{ product.categoria || 'General' }}</span>
+                </div>
+                
+                <!-- Título principal -->
+                <h1 class="font-weight-bold mb-3" style="font-size: 32px; line-height: 1.3; color: #2d3436;">{{ product.nombre }}</h1>
+                
+                <!-- Reseñas -->
+                <div class="d-flex align-items-center mb-4" *ngIf="showReviews" style="border-bottom: 1px solid #e9ecef; padding-bottom: 15px;">
+                    <div class="text-warning mr-3">
+                        <ng-container *ngFor="let star of [1,2,3,4,5]">
+                            <i class="mr-1" [ngClass]="getStarIcon(star)"></i>
+                        </ng-container>
+                    </div>
+                    <small class="text-muted" style="font-size: 13px;">{{ reviews.length }} evaluaciones</small>
+                </div>
+                
+                <!-- Sección de precio mejorada -->
+                <div class="mb-4" style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #007bff;">
+                    <small style="color: #6c757d; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Precio</small>
+                    <div style="margin-top: 10px;">
+                        <span *ngIf="product.oferta && product.precioOferta && product.precioOferta > 0" class="h2 font-weight-bold text-primary" style="color: #dc3545 !important; font-size: 42px;">Q.{{ product.precioOferta | number:'1.2-2' }}</span>
+                        <span *ngIf="!product.oferta || !product.precioOferta || product.precioOferta <= 0" class="h2 font-weight-bold" style="font-size: 42px; color: #2d3436;">Q.{{ product.precio | number:'1.2-2' }}</span>
+                        <span *ngIf="product.oferta && product.precioOferta && product.precioOferta > 0" class="ml-3 text-muted" style="font-size: 18px; text-decoration: line-through; color: #adb5bd;">Q.{{ product.precio | number:'1.2-2' }}</span>
+                    </div>
+                </div>
+                
+                <!-- Descripción -->
+                <p style="color: #495057; line-height: 1.8; margin-bottom: 25px; font-size: 15px;">{{ product.descripcion }}</p>
+                
+                <!-- Información adicional -->
+                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 5px; margin-bottom: 25px; color: #856404; font-size: 13px;">
+                    <i class="fa fa-info-circle mr-2"></i>
+                    <strong>Envío gratis</strong> en compras mayores a Q.100
+                </div>
+                
+                <!-- Botones de acción -->
+                <div class="d-flex gap-3 mb-4">
+                    <button class="btn btn-primary px-5 py-3" style="font-weight: 600; border-radius: 5px; font-size: 16px; flex: 1; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);" (click)="addToCart()" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0, 123, 255, 0.5)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0, 123, 255, 0.3)';">
+                        <i class="fa fa-shopping-cart mr-2"></i>Agregar al carrito
+                    </button>
+                    <a routerLink="/shop" class="btn btn-outline-secondary px-5 py-3" style="font-weight: 600; border-radius: 5px; font-size: 16px;">
+                        <i class="fa fa-arrow-left mr-2"></i>Seguir comprando
+                    </a>
+                </div>
+                
+                <!-- Garantía / Información de confianza -->
+                <div class="d-flex justify-content-between" style="padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 13px;">
+                    <div style="text-align: center; flex: 1;">
+                        <i class="fa fa-truck" style="font-size: 24px; color: #007bff; margin-bottom: 8px; display: block;"></i>
+                        <strong>Envío Rápido</strong>
+                    </div>
+                    <div style="text-align: center; flex: 1;">
+                        <i class="fa fa-shield-alt" style="font-size: 24px; color: #28a745; margin-bottom: 8px; display: block;"></i>
+                        <strong>Compra Segura</strong>
+                    </div>
+                    <div style="text-align: center; flex: 1;">
+                        <i class="fa fa-undo" style="font-size: 24px; color: #ffc107; margin-bottom: 8px; display: block;"></i>
+                        <strong>Devoluciones</strong>
+                    </div>
+                </div>
+
+                <div *ngIf="showReviews">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="font-weight-semi-bold">Opiniones y calificaciones</h5>
+                            <p class="text-muted mb-3">Calificación media: {{ averageRating | number:'1.1-1' }} / 5</p>
+                            <div *ngIf="reviews.length > 0; else noReviews">
+                                <div class="media mb-3" *ngFor="let review of reviews">
+                                    <div class="media-body">
+                                        <h6 class="mt-0 mb-1">{{ review.nombre }} <small class="text-muted">({{ review.puntuacion }} / 5)</small></h6>
+                                        <p class="mb-1">{{ review.comentario }}</p>
+                                        <small class="text-muted">{{ review.fecha }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-template #noReviews>
+                                <p class="text-muted mb-0">Sé el primero en dejar una opinión sobre este producto.</p>
+                            </ng-template>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-5">
+                        <div class="card-body">
+                            <h5 class="font-weight-semi-bold">Dejar una opinión</h5>
+                            <form (ngSubmit)="submitReview()" #reviewForm="ngForm">
+                                <div class="form-group">
+                                    <label>Tu nombre</label>
+                                    <input type="text" class="form-control" required [(ngModel)]="reviewerName" name="reviewerName">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tu calificación</label>
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <label class="mr-3 mb-2" style="cursor:pointer;" *ngFor="let valor of [1,2,3,4,5]">
+                                            <input type="radio" class="mr-1" name="reviewRating" [value]="valor" [(ngModel)]="reviewRating" required>
+                                            {{ valor }} <i class="fa fa-star text-warning"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tu opinión</label>
+                                    <textarea class="form-control" rows="3" required [(ngModel)]="reviewText" name="reviewText"></textarea>
+                                </div>
+                                <button class="btn btn-primary" [disabled]="!reviewForm.form.valid">Enviar opinión</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Shop Detail End -->
+
+
+    <!-- Products Start -->
+    <div class="container-fluid py-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">También te puede interesar</span></h2>
+        </div>
+        <div class="row px-xl-5">
+            <div class="col-lg-4 col-md-6 col-sm-12 pb-1" *ngFor="let prod of relatedProducts">
+                <div class="card product-item border-0 mb-4" style="height: 325px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 170px;">
+                        <img class="img-fluid w-100" [src]="prod.imagen" alt="{{ prod.nombre }}" style="height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">{{ prod.nombre }}</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6 *ngIf="prod.oferta" class="text-primary font-weight-bold">Q.{{ prod.precioOferta }}</h6>
+                            <h6 *ngIf="!prod.oferta" class="text-primary font-weight-bold">Q.{{ prod.precio }}</h6>
+                            <h6 class="text-muted ml-2" *ngIf="prod.oferta">
+                                <del>Q.{{ prod.precio }}</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a [routerLink]="['/detail', prod.id]" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Ver detalle</a>
+                        <button class="btn btn-sm text-dark p-0" (click)="addToCart(prod)"><i class="fas fa-shopping-cart text-primary mr-1"></i>Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Products End -->

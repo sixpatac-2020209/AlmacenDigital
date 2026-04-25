@@ -1,0 +1,413 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Panel de Administrador</h1>
+    <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
+  </div>
+
+  <!-- Navegación por pestañas -->
+  <div class="tabs">
+    <button class="tab-btn" [class.active]="!showCategoriaForm && !showOfertaForm" (click)="showForm = false; showCategoriaForm = false; showOfertaForm = false">
+      Productos
+    </button>
+    <button class="tab-btn" [class.active]="showCategoriaForm" (click)="showForm = false; showCategoriaForm = true; showOfertaForm = false">
+      Categorías
+    </button>
+    <button class="tab-btn" [class.active]="showOfertaForm" (click)="showForm = false; showCategoriaForm = false; showOfertaForm = true">
+      Ofertas
+    </button>
+  </div>
+
+  <div class="admin-content">
+    <div class="header-section">
+      <h2>Gestionar Productos</h2>
+      <button 
+        class="btn-primary" 
+        (click)="toggleForm()"
+      >
+        {{ showForm ? 'Cancelar' : '+ Crear Nuevo Producto' }}
+      </button>
+    </div>
+
+    <!-- Alertas -->
+    <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+
+    <!-- Formulario -->
+    <div *ngIf="showForm" class="form-section">
+      <h3>{{ editingId ? 'Editar' : 'Crear' }} Producto</h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nombre del Producto *</label>
+          <input 
+            type="text" 
+            [(ngModel)]="form.nombre" 
+            placeholder="Ej: Laptop Dell"
+            [disabled]="loading"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Categoría</label>
+          <select [(ngModel)]="form.categoriaId" [disabled]="loading">
+            <option value="">Seleccionar categoría</option>
+            <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Precio Normal *</label>
+          <input 
+            type="number" 
+            [(ngModel)]="form.precio" 
+            placeholder="0.00"
+            step="0.01"
+            [disabled]="loading"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>¿Tiene Oferta?</label>
+          <select [(ngModel)]="form.oferta" [disabled]="loading">
+            <option [value]="0">No (valor: 0)</option>
+            <option [value]="1">Sí (valor: 1)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Cantidad en Stock *</label>
+          <input 
+            type="number" 
+            [(ngModel)]="form.cantidad" 
+            placeholder="0"
+            min="0"
+            [disabled]="loading"
+          />
+        </div>
+
+        <div *ngIf="form.oferta == 1" class="form-group">
+          <label>Precio de Oferta *</label>
+          <input 
+            type="number" 
+            [(ngModel)]="form.precioOferta" 
+            placeholder="0.00"
+            step="0.01"
+            [disabled]="loading"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Descripción</label>
+        <textarea 
+          [(ngModel)]="form.descripcion" 
+          placeholder="Descripción del producto"
+          rows="4"
+          [disabled]="loading"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Subir Imágenes (1 a 5)</label>
+        <input 
+          type="file" 
+          multiple 
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          [disabled]="loading || uploading"
+          #fileInput
+        />
+        <p class="file-info">{{ selectedFiles.length }} archivo(s) seleccionado(s)</p>
+        <small class="text-muted">Selecciona entre 1 y 5 imágenes para el producto</small>
+      </div>
+
+      <button 
+        class="btn-save" 
+        (click)="guardarProducto()"
+        [disabled]="loading || uploading"
+      >
+        {{ uploading ? 'Subiendo imágenes...' : loading ? 'Guardando...' : 'Guardar Producto' }}
+      </button>
+    </div>
+
+    <!-- Tabla de Productos -->
+    <div class="products-section">
+      <h3>Productos ({{ productos.length }})</h3>
+      
+      <div *ngIf="productos.length === 0" class="no-products">
+        No hay productos aún. Crea el primero!
+      </div>
+
+      <div *ngIf="productos.length > 0" class="products-grid">
+        <div *ngFor="let producto of productos" class="product-card">
+          <div class="product-images">
+            <div *ngIf="producto.imagenes && producto.imagenes.length > 0" class="images-grid">
+              <div *ngFor="let img of producto.imagenes.slice(0, 3); let last = last; let i = index" class="image-item">
+                <img [src]="img" [alt]="producto.nombre" />
+                <button 
+                  class="btn-delete-img" 
+                  (click)="eliminarImagen(producto, i)"
+                  title="Eliminar imagen"
+                >
+                  ✕
+                </button>
+              </div>
+              <div *ngIf="producto.imagenes.length > 3" class="more-images">
+                +{{ producto.imagenes.length - 3 }} más
+              </div>
+            </div>
+            <div *ngIf="!producto.imagenes || producto.imagenes.length === 0" class="no-image">
+              Sin imágenes
+            </div>
+          </div>
+
+          <div class="product-info">
+            <div class="product-header">
+              <h4>{{ producto.nombre }}</h4>
+              <span class="product-id">#{{ producto.id?.substring(0, 8) }}</span>
+            </div>
+            
+            <p class="category" *ngIf="producto.categoriaId">
+              <i class="fas fa-tag"></i> {{ producto.categoriaId }}
+            </p>
+            
+            <p class="description" *ngIf="producto.descripcion; else noDescription">
+              {{ producto.descripcion.length > 100 ? (producto.descripcion | slice:0:100) + '...' : producto.descripcion }}
+            </p>
+            <ng-template #noDescription>
+              <p class="no-description">Sin descripción</p>
+            </ng-template>
+            
+            <div class="price-section">
+              <div class="price-info">
+                <span class="price">Q.{{ producto.precio | number: '1.2-2' }}</span>
+                <span *ngIf="producto.oferta == 1 && producto.precioOferta && producto.precioOferta < producto.precio" class="offer-badge">
+                  OFERTA
+                </span>
+              </div>
+              <span *ngIf="producto.oferta == 1 && producto.precioOferta && producto.precioOferta < producto.precio" class="offer-price">
+                Oferta: Q.{{ producto.precioOferta | number: '1.2-2' }}
+              </span>
+            </div>
+
+            <div class="stock-section">
+              <span class="stock" [class.low-stock]="producto.cantidad < 10" [class.out-of-stock]="producto.cantidad === 0">
+                <i class="fas fa-boxes"></i> Stock: {{ producto.cantidad }}
+              </span>
+              <span *ngIf="producto.cantidad === 0" class="out-of-stock-badge">AGOTADO</span>
+            </div>
+          </div>
+
+          <div class="product-actions">
+            <button class="btn-edit" (click)="editarProducto(producto)">
+              Editar
+            </button>
+            <button class="btn-delete" (click)="eliminarProducto(producto.id!)">
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Categorías -->
+    <div class="categories-section">
+      <div class="header-section">
+        <h2>Gestionar Categorías</h2>
+        <button 
+          class="btn-primary" 
+          (click)="toggleCategoriaForm()"
+        >
+          {{ showCategoriaForm ? 'Cancelar' : '+ Crear Nueva Categoría' }}
+        </button>
+      </div>
+
+      <!-- Formulario de Categoría -->
+      <div *ngIf="showCategoriaForm" class="form-section">
+        <h3>{{ editingCategoriaId ? 'Editar' : 'Crear' }} Categoría</h3>
+        
+        <div class="form-group">
+          <label>Nombre de la Categoría *</label>
+          <input 
+            type="text" 
+            [(ngModel)]="categoriaForm.nombre" 
+            placeholder="Ej: Electrónica"
+            [disabled]="loading"
+          />
+        </div>
+
+        <button 
+          class="btn-save" 
+          (click)="guardarCategoria()"
+          [disabled]="loading"
+        >
+          {{ loading ? 'Guardando...' : 'Guardar Categoría' }}
+        </button>
+      </div>
+
+      <!-- Lista de Categorías -->
+      <div class="categories-list">
+        <h3>Categorías ({{ categorias.length }})</h3>
+        
+        <div *ngIf="categorias.length === 0" class="no-categories">
+          No hay categorías aún. Crea la primera!
+        </div>
+
+        <div *ngIf="categorias.length > 0" class="categories-grid">
+          <div *ngFor="let categoria of categorias" class="category-card">
+            <div class="category-info">
+              <h4>{{ categoria.nombre }}</h4>
+            </div>
+
+            <div class="category-actions">
+              <button class="btn-edit" (click)="editarCategoria(categoria)">
+                Editar
+              </button>
+              <button class="btn-delete" (click)="eliminarCategoria(categoria.id!)">
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Ofertas -->
+    <div *ngIf="showOfertaForm" class="section">
+      <div class="header-section">
+        <h2>Gestionar Ofertas</h2>
+        <button
+          class="btn-primary"
+          (click)="toggleOfertaForm()"
+        >
+          {{ showOfertaForm ? 'Cancelar' : '+ Crear Nueva Oferta' }}
+        </button>
+      </div>
+
+      <!-- Formulario de Oferta -->
+      <div class="form-section">
+        <h3>{{ editingOfertaId ? 'Editar' : 'Crear' }} Oferta</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Título de la Oferta *</label>
+            <input
+              type="text"
+              [(ngModel)]="ofertaForm.titulo"
+              placeholder="Ej: Super Oferta de Verano"
+              [disabled]="loading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>¿Activa?</label>
+            <select [(ngModel)]="ofertaForm.activa" [disabled]="loading">
+              <option [value]="true">Sí</option>
+              <option [value]="false">No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Fecha de Inicio *</label>
+            <input
+              type="datetime-local"
+              [ngModel]="ofertaForm.fechaInicio | date:'yyyy-MM-ddTHH:mm'"
+              (ngModelChange)="onFechaInicioChange($event)"
+              [disabled]="loading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Fecha de Fin *</label>
+            <input
+              type="datetime-local"
+              [ngModel]="ofertaForm.fechaFin | date:'yyyy-MM-ddTHH:mm'"
+              (ngModelChange)="onFechaFinChange($event)"
+              [disabled]="loading"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción *</label>
+          <textarea
+            [(ngModel)]="ofertaForm.descripcion"
+            placeholder="Describe la oferta..."
+            rows="4"
+            [disabled]="loading"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Imagen de la Oferta</label>
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onOfertaFileSelected($event)"
+            [disabled]="loading"
+            #ofertaFileInput
+          />
+          <p class="file-info">{{ selectedOfertaFile ? selectedOfertaFile.name : 'Ningún archivo seleccionado' }}</p>
+          <small class="text-muted">Sube una imagen atractiva para la oferta</small>
+        </div>
+
+        <button
+          class="btn-save"
+          (click)="guardarOferta()"
+          [disabled]="loading"
+        >
+          {{ loading ? 'Guardando...' : 'Guardar Oferta' }}
+        </button>
+      </div>
+
+      <!-- Lista de Ofertas -->
+      <div class="ofertas-section">
+        <h3>Ofertas ({{ ofertas.length }})</h3>
+
+        <div *ngIf="ofertas.length === 0" class="no-ofertas">
+          No hay ofertas aún. Crea la primera!
+        </div>
+
+        <div *ngIf="ofertas.length > 0" class="ofertas-grid">
+          <div *ngFor="let oferta of ofertas" class="oferta-card">
+            <div class="oferta-image">
+              <img *ngIf="oferta.imagen" [src]="oferta.imagen" [alt]="oferta.titulo" />
+              <div *ngIf="!oferta.imagen" class="no-image">
+                Sin imagen
+              </div>
+            </div>
+
+            <div class="oferta-info">
+              <div class="oferta-header">
+                <h4>{{ oferta.titulo }}</h4>
+                <span class="oferta-status" [class.active]="oferta.activa" [class.inactive]="!oferta.activa">
+                  {{ oferta.activa ? 'ACTIVA' : 'INACTIVA' }}
+                </span>
+              </div>
+
+              <p class="oferta-description">
+                {{ oferta.descripcion.length > 100 ? (oferta.descripcion | slice:0:100) + '...' : oferta.descripcion }}
+              </p>
+
+              <div class="oferta-dates">
+                <small class="text-muted">
+                  <i class="fas fa-calendar-alt"></i>
+                  Del {{ oferta.fechaInicio | date:'dd/MM/yyyy HH:mm' }} al {{ oferta.fechaFin | date:'dd/MM/yyyy HH:mm' }}
+                </small>
+              </div>
+            </div>
+
+            <div class="oferta-actions">
+              <button class="btn-edit" (click)="editarOferta(oferta)">
+                Editar
+              </button>
+              <button class="btn-delete" (click)="eliminarOferta(oferta.id!)">
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

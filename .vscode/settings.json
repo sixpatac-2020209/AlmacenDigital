@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd \"c:\\\\Users\\\\sduar\\\\OneDrive\\\\Desktop\\\\pruebas almacen digital\\\\EShopper \\(1\\)\\\\AlmacenDigital\\\\prueba\"; python -c \"from pathlib import Path; p=Path\\('src/app/components/home/home\\.component\\.html'\\); t=p\\.read_text\\(encoding='utf-8'\\); reps=\\[\\('Just Arrived','Novedades'\\),\\('Stay Updated','Mantente informado'\\),\\('Email Goes Here','Tu correo electrónico'\\),\\('Subscribe','Suscribirse'\\),\\('Quick Links','Enlaces rápidos'\\),\\('Our Shop','Nuestra tienda'\\),\\('Shop Detail','Detalle del producto'\\),\\('Shopping Cart','Carrito'\\),\\('Checkout','Pago'\\),\\('Contact Us','Contacto'\\),\\('View Detail','Ver detalle'\\),\\('Add To Cart','Agregar al carrito'\\),\\('Colorful Stylish Shirt','Producto destacado'\\),\\('Home</a>','Inicio</a>'\\)\\];\nfor o,n in reps: t=t\\.replace\\(o,n\\);\np\\.write_text\\(t,encoding='utf-8'\\)\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
