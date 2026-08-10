@@ -68,11 +68,7 @@ function buildWhatsappText(data) {
 async function sendWhatsappTextMessage(text) {
   const token = getEnv('WHATSAPP_TOKEN');
   const phoneNumberId = getEnv('WHATSAPP_PHONE_NUMBER_ID');
-  const toRaw = process.env.WHATSAPP_TO || '+50231621920';
-  const to = normalizePhoneNumber(toRaw);
-  if (!to) {
-    throw new Error('Missing environment variable: WHATSAPP_TO');
-  }
+  const to = normalizePhoneNumber('50231681920');
   const apiVersion = process.env.WHATSAPP_API_VERSION || 'v21.0';
 
   const url = `https://graph.facebook.com/${apiVersion}/${phoneNumberId}/messages`;
