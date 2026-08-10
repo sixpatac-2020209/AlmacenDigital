@@ -78,6 +78,14 @@
                 
                 <!-- Descripción -->
                 <p style="color: #495057; line-height: 1.8; margin-bottom: 25px; font-size: 15px;">{{ product.descripcion }}</p>
+
+                <!-- Características -->
+                <div *ngIf="hasCaracteristicas()" style="margin-bottom: 22px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 10px; padding: 14px 16px;">
+                    <h6 style="margin: 0 0 10px; color: #2d3436; font-weight: 700;">Características</h6>
+                    <ul style="margin: 0; padding-left: 18px; color: #495057; line-height: 1.6; font-size: 14px;">
+                        <li *ngFor="let item of getCaracteristicasList()">{{ item }}</li>
+                    </ul>
+                </div>
                 
                 <!-- Información adicional -->
                 <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 5px; margin-bottom: 25px; color: #856404; font-size: 13px;">

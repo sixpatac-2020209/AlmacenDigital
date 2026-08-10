@@ -7,6 +7,7 @@ export interface Product {
   id: string | number;
   nombre: string;
   descripcion: string;
+  caracteristicas?: string;
   precio: number;
   sku?: string;
   codigo?: string;
@@ -42,6 +43,7 @@ export class ProductService {
           id: fp.id || '',
           nombre: fp.nombre,
           descripcion: fp.descripcion,
+          caracteristicas: fp.caracteristicas || fp.especificaciones || '',
           precio: fp.precio,
           sku: fp.sku || fp.codigo || '',
           codigo: fp.codigo || fp.sku || '',

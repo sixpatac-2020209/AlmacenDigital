@@ -151,4 +151,23 @@ export class DetailComponent implements OnInit {
   toggleFavoritoActual(): void {
     this.favoritesService.toggleFavorite(this.product?.id);
   }
+
+  hasCaracteristicas(): boolean {
+    const raw = this.product?.caracteristicas || '';
+    return raw.trim().length > 0;
+  }
+
+  getCaracteristicasList(): string[] {
+    const raw = (this.product?.caracteristicas || '').trim();
+    if (!raw) {
+      return [];
+    }
+
+    return raw
+      .split(/\r?\n|;|\|/)
+      .map((item) => item.trim().replace(/^[-*•]\s*/, ''))
+      .flatMap((item) => item.split(/,(?=\s*[A-Za-z0-9])/))
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0);
+  }
 }
