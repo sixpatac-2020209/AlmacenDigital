@@ -116,10 +116,10 @@ app.get('/health', (_req, res) => {
 
 app.post('/webhook/pedido', async (req, res) => {
   try {
-    const expectedToken = getEnv('WEBHOOK_TOKEN');
+    const expectedToken = String(process.env.WEBHOOK_TOKEN || '').trim();
     const incomingToken = String(req.query.token || req.headers['x-webhook-token'] || '');
 
-    if (!incomingToken || incomingToken !== expectedToken) {
+    if (expectedToken && (!incomingToken || incomingToken !== expectedToken)) {
       return res.status(401).json({ ok: false, error: 'Unauthorized token' });
     }
 
