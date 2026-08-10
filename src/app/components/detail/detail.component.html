@@ -90,6 +90,15 @@
                     <button class="btn btn-primary px-5 py-3" style="font-weight: 600; border-radius: 5px; font-size: 16px; flex: 1; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);" (click)="addToCart()" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0, 123, 255, 0.5)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0, 123, 255, 0.3)';">
                         <i class="fa fa-shopping-cart mr-2"></i>Agregar al carrito
                     </button>
+                    <button
+                        type="button"
+                        class="btn btn-outline-danger px-4 py-3"
+                        style="font-weight: 600; border-radius: 5px;"
+                        (click)="toggleFavoritoActual()"
+                    >
+                        <i class="fa-heart mr-2" [class.fas]="isFavoritoActual()" [class.far]="!isFavoritoActual()"></i>
+                        {{ isFavoritoActual() ? 'En favoritos' : 'Favorito' }}
+                    </button>
                     <a routerLink="/shop" class="btn btn-outline-secondary px-5 py-3" style="font-weight: 600; border-radius: 5px; font-size: 16px;">
                         <i class="fa fa-arrow-left mr-2"></i>Seguir comprando
                     </a>

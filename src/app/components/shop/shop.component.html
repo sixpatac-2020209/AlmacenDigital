@@ -101,6 +101,15 @@
                         <div
                             class="card-header product-img position-relative overflow-hidden bg-transparent border p-0"
                         >
+                            <button
+                                type="button"
+                                class="favorite-btn"
+                                (click)="toggleFavorito(product)"
+                                [attr.aria-label]="isFavorito(product) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+                                [title]="isFavorito(product) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+                            >
+                                <i class="fa-heart" [class.fas]="isFavorito(product)" [class.far]="!isFavorito(product)"></i>
+                            </button>
                             <img class="img-fluid w-100" [src]="product.imagen || 'assets/img/product-placeholder.jpg'" [alt]="product.nombre">
                         </div>
 

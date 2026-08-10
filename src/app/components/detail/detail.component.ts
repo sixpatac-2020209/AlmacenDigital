@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
+import { FavoritesService } from '../../services/favorites.service';
 
 interface Review {
   nombre: string;
@@ -36,6 +37,7 @@ export class DetailComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private cartService: CartService,
+    private favoritesService: FavoritesService,
     private router: Router
   ) { }
 
@@ -140,5 +142,13 @@ export class DetailComponent implements OnInit {
         this.router.navigate(['/checkout']);
       }
     });
+  }
+
+  isFavoritoActual(): boolean {
+    return this.favoritesService.isFavorite(this.product?.id);
+  }
+
+  toggleFavoritoActual(): void {
+    this.favoritesService.toggleFavorite(this.product?.id);
   }
 }

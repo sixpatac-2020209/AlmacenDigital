@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { Categoria } from '../../services/firebase.service';
 import { combineLatest } from 'rxjs';
+import { FavoritesService } from '../../services/favorites.service';
 
 @Component({
   selector: 'app-shop',
@@ -34,6 +35,7 @@ export class ShopComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private cartService: CartService,
+    private favoritesService: FavoritesService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -216,5 +218,13 @@ export class ShopComponent implements OnInit {
     });
 
     this.filtrarProductos();
+  }
+
+  isFavorito(product: Product): boolean {
+    return this.favoritesService.isFavorite(product.id);
+  }
+
+  toggleFavorito(product: Product): void {
+    this.favoritesService.toggleFavorite(product.id);
   }
 }

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
 import { FirebaseService } from '../../services/firebase.service';
+import { FavoritesService } from '../../services/favorites.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -20,6 +21,7 @@ export class HeaderComponent implements OnInit {
   isHomePage: boolean = false;
   darkMode: boolean = false;
   totalItems$: Observable<number>;
+  totalFavorites$: Observable<number>;
   currentRoute: string = '';
   categorias: any[] = [];
   searchTerm: string = '';
@@ -29,9 +31,11 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private cartService: CartService,
     private productService: ProductService,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private favoritesService: FavoritesService
   ) {
     this.totalItems$ = this.cartService.totalItems$;
+    this.totalFavorites$ = this.favoritesService.totalFavorites$;
   }
 
   ngOnInit() {
