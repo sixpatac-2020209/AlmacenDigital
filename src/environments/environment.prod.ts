@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  pedidosNotificationWebhookUrl: '',
+  pedidosNotificationWebhookUrl: 'https://almacendigital-production.up.railway.app/webhook/pedido',
   pedidosNotificationToken: '',
   firebase: {
     apiKey: "AIzaSyBNG9XFCD1zy5Xn_Ig8n3hYi1RreuZHnkg",
