@@ -33,6 +33,10 @@ function formatCurrency(value) {
   return `Q.${number.toFixed(2)}`;
 }
 
+function normalizePhoneNumber(value) {
+  return String(value || '').replace(/[^\d]/g, '');
+}
+
 function buildWhatsappText(data) {
   const orderRef = data.orderRef || 'SIN-REF';
   const pedidoId = data.pedidoId || 'N/A';
@@ -64,7 +68,11 @@ function buildWhatsappText(data) {
 async function sendWhatsappTextMessage(text) {
   const token = getEnv('WHATSAPP_TOKEN');
   const phoneNumberId = getEnv('WHATSAPP_PHONE_NUMBER_ID');
-  const to = getEnv('WHATSAPP_TO');
+  const toRaw = process.env.WHATSAPP_TO || '+50231621920';
+  const to = normalizePhoneNumber(toRaw);
+  if (!to) {
+    throw new Error('Missing environment variable: WHATSAPP_TO');
+  }
   const apiVersion = process.env.WHATSAPP_API_VERSION || 'v21.0';
 
   const url = `https://graph.facebook.com/${apiVersion}/${phoneNumberId}/messages`;
