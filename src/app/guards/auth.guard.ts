@@ -12,7 +12,7 @@ export class AuthGuard {
   ) {}
 
   canActivate(): boolean {
-    if (this.authService.isAuthenticated()) {
+    if (this.authService.isAdminAuthenticated()) {
       return true;
     } else {
       this.router.navigate(['/admin/login']);

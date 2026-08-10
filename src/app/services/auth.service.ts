@@ -47,4 +47,9 @@ export class AuthService {
   isAuthenticated(): boolean {
     return this.auth.currentUser != null;
   }
+
+  isAdminAuthenticated(): boolean {
+    const user = this.auth.currentUser;
+    return !!user && !user.isAnonymous;
+  }
 }

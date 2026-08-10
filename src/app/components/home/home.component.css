@@ -236,6 +236,16 @@
     right: 80px;
     bottom: 2px;
   }
+
+  #header-carousel,
+  #header-carousel .carousel-inner,
+  #header-carousel .carousel-item {
+    touch-action: pan-y !important;
+  }
+
+  #header-carousel .carousel-item img {
+    pointer-events: none;
+  }
 }
 
 .offer-banner {
