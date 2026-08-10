@@ -2,3 +2,12 @@ node_modules
 .angular/
 dist/
 deploy-cli.log
+
+# Python generated artifacts
+**/.venv/
+**/__pycache__/
+*.pyc
+
+# Scraper generated outputs
+buscador_productos_python_v5/productos_encontrados/
+buscador_productos_python_v5/resultados_productos.csv
