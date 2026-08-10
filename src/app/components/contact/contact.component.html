@@ -20,34 +20,38 @@
         </div>
         <div class="row px-xl-5">
             <div class="col-lg-7 mb-5">
-                <div class="bg-white rounded shadow-sm p-4">
-                    <form>
+                <div class="bg-white rounded shadow-sm p-4 contact-card">
+                    <form (ngSubmit)="enviarWhatsApp()" #contactForm="ngForm">
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Nombre" required>
+                            <input type="text" class="form-control" placeholder="Nombre" required [(ngModel)]="nombre" name="nombre">
                         </div>
                         <div class="form-group">
-                            <input type="email" class="form-control" placeholder="Correo electrónico" required>
+                            <input type="email" class="form-control" placeholder="Correo electrónico" required [(ngModel)]="correo" name="correo">
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Asunto" required>
+                            <input type="text" class="form-control" placeholder="Asunto" required [(ngModel)]="asunto" name="asunto">
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" rows="6" placeholder="Mensaje" required></textarea>
+                            <textarea class="form-control" rows="6" placeholder="Mensaje" required [(ngModel)]="mensaje" name="mensaje"></textarea>
                         </div>
                         <div>
-                            <button class="btn btn-primary py-2 px-4" type="submit">Enviar mensaje</button>
+                            <button class="btn btn-primary py-2 px-4" type="submit" [disabled]="!contactForm.form.valid">
+                                Enviar por WhatsApp
+                            </button>
                         </div>
+                        <small class="d-block mt-2 text-muted">Se abrirá WhatsApp para enviar tu mensaje al +502 3168 1920.</small>
+                        <div class="alert alert-success mt-3 mb-0" *ngIf="estado === 'sent'">Mensaje listo para enviarse por WhatsApp.</div>
                     </form>
                 </div>
             </div>
             <div class="col-lg-5 mb-5">
-                <div class="bg-white rounded shadow-sm p-4 h-100">
+                <div class="bg-white rounded shadow-sm p-4 h-100 contact-card">
                     <h5 class="font-weight-semi-bold mb-3">Estamos para ayudarte</h5>
                     <p class="mb-4">Si tienes alguna pregunta sobre nuestros productos, pedidos o envíos, escríbenos y te responderemos lo antes posible.</p>
                     <div class="d-flex flex-column mb-4">
                         <h5 class="font-weight-semi-bold mb-3">Tienda Principal</h5>
                         <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>Av. Principal 123, Ciudad</p>
-                        <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>contacto&#64;almacendigital.com</p>
+                        <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>almacendigital&#64;gmail.com</p>
                         <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+502 1234 5678</p>
                     </div>
                     <div class="d-flex flex-column">

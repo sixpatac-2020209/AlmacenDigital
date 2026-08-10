@@ -1,0 +1,35 @@
+body.dark-mode .contact-card {
+  background: #14202b !important;
+  border: 1px solid #273a4c;
+}
+
+body.dark-mode .contact-card h5,
+body.dark-mode .contact-card p,
+body.dark-mode .contact-card label {
+  color: #d9e6f2 !important;
+}
+
+body.dark-mode .contact-card .text-muted {
+  color: #9eb4c8 !important;
+}
+
+body.dark-mode .contact-card .form-control {
+  background: #0f1a23;
+  color: #d9e6f2;
+  border-color: #2f4254;
+}
+
+body.dark-mode .contact-card .form-control::placeholder {
+  color: #8ea3b7;
+}
+
+body.dark-mode .bg-secondary h1,
+body.dark-mode .bg-secondary .m-0 {
+  color: #d9e6f2;
+}
+
+@media (max-width: 767px) {
+  .contact-card {
+    padding: 16px !important;
+  }
+}
