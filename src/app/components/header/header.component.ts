@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
 import { FirebaseService } from '../../services/firebase.service';
@@ -18,17 +19,20 @@ import { FormsModule } from '@angular/forms';
 export class HeaderComponent implements OnInit {
   isHomePage: boolean = false;
   darkMode: boolean = false;
-  totalItems = 0;
+  totalItems$: Observable<number>;
   currentRoute: string = '';
   categorias: any[] = [];
   searchTerm: string = '';
+  showAdminLogin: boolean = true;
 
   constructor(
     private router: Router,
     private cartService: CartService,
     private productService: ProductService,
     private firebaseService: FirebaseService
-  ) { }
+  ) {
+    this.totalItems$ = this.cartService.totalItems$;
+  }
 
   ngOnInit() {
     this.router.events.pipe(
@@ -50,7 +54,6 @@ export class HeaderComponent implements OnInit {
       document.body.classList.add('dark-mode');
     }
 
-    this.loadCount();
     this.loadCategorias();
   }
 
@@ -60,7 +63,7 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  selectCategoria(categoriaId: number | null) {
+  selectCategoria(categoriaId: string | null) {
     this.router.navigate(['/shop'], { queryParams: categoriaId ? { categoria: categoriaId } : {} });
   }
 
@@ -84,10 +87,6 @@ export class HeaderComponent implements OnInit {
     this.darkMode = !this.darkMode;
     document.body.classList.toggle('dark-mode', this.darkMode);
     localStorage.setItem('darkMode', this.darkMode.toString());
-  }
-
-  loadCount() {
-    this.totalItems = this.cartService.getTotalItems();
   }
 
 }

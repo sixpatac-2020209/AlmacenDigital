@@ -1,0 +1,5 @@
+01.jpg | https://img.pacifiko.com/PROD/resize/0/1000x1000/alisador1.jpg
+02.jpg | https://img.pacifiko.com/PROD/resize/0/1000x1000/alisadorr.jpg
+03.jpg | https://img.pacifiko.com/PROD/resize/0/1000x1000/alisador-para-pelo-humedo-Remington-S8001P-110-F47-09-11-2018%2010-21-15%20a.%20m..png
+04.jpg | https://img.pacifiko.com/PROD/resize/0/1000x1000/alisador-para-pelo-humedo-Remington-S8001P-110-F47-09-11-2018%2010-36-26%20a.%20m..png
+05.jpg | https://img.pacifiko.com/PROD/resize/0/1000x1000/alisador.jpg

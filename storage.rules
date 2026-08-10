@@ -1,0 +1,18 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Permitir acceso público a archivos de productos (lectura pública)
+    match /productos/{productId}/{allPaths=**} {
+      allow read: if true;
+      // Escritura para usuarios autenticados (modo desarrollo/local)
+      allow write: if request.auth != null;
+    }
+
+    // Bloquear escritura por defecto
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

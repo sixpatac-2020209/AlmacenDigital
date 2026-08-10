@@ -47,8 +47,9 @@ export class DetailComponent implements OnInit {
         // Obtener productos relacionados (misma categoría)
         if (this.product) {
           this.currentImageIndex = 0;
+          const categoryId = this.product.categoriaId || this.product.idCategoria || '';
           this.relatedProducts = products
-            .filter((p: Product) => p.idCategoria === this.product?.idCategoria && p.id !== this.product?.id)
+            .filter((p: Product) => (p.categoriaId || p.idCategoria || '') === categoryId && p.id !== this.product?.id)
             .slice(0, 4);
           this.reviews = (this.product as any).reviews || [];
         }

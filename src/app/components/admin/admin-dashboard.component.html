@@ -1,4 +1,9 @@
 <div class="admin-container">
+  <div class="pedido-toast" *ngIf="showPedidoToast">
+    <strong>Nuevo pedido</strong>
+    <span>{{ pedidoToastMessage }}</span>
+  </div>
+
   <div class="admin-header">
     <h1>Panel de Administrador</h1>
     <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
@@ -6,26 +11,104 @@
 
   <!-- Navegación por pestañas -->
   <div class="tabs">
-    <button class="tab-btn" [class.active]="!showCategoriaForm && !showOfertaForm" (click)="showForm = false; showCategoriaForm = false; showOfertaForm = false">
+    <button class="tab-btn" [class.active]="activeTab === 'productos'" (click)="setActiveTab('productos')">
       Productos
     </button>
-    <button class="tab-btn" [class.active]="showCategoriaForm" (click)="showForm = false; showCategoriaForm = true; showOfertaForm = false">
+    <button class="tab-btn" [class.active]="activeTab === 'categorias'" (click)="setActiveTab('categorias')">
       Categorías
     </button>
-    <button class="tab-btn" [class.active]="showOfertaForm" (click)="showForm = false; showCategoriaForm = false; showOfertaForm = true">
+    <button class="tab-btn" [class.active]="activeTab === 'ofertas'" (click)="setActiveTab('ofertas')">
       Ofertas
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'pedidos'" (click)="setActiveTab('pedidos')">
+      Pedidos
+      <span class="tab-badge" *ngIf="nuevosPedidosCount > 0">{{ nuevosPedidosCount }}</span>
     </button>
   </div>
 
   <div class="admin-content">
-    <div class="header-section">
-      <h2>Gestionar Productos</h2>
-      <button 
-        class="btn-primary" 
-        (click)="toggleForm()"
-      >
-        {{ showForm ? 'Cancelar' : '+ Crear Nuevo Producto' }}
-      </button>
+    <div *ngIf="activeTab === 'productos'">
+    <div class="dashboard-toolbar">
+      <div class="dashboard-title">
+        <h2>Panel de Productos</h2>
+        <p class="dashboard-subtitle">Administra productos, categorías y ofertas desde un solo lugar.</p>
+      </div>
+      <div class="toolbar-actions">
+        <button class="btn-primary" (click)="toggleForm()">
+          {{ showForm ? 'Cancelar' : '+ Crear Nuevo Producto' }}
+        </button>
+        <label class="btn-secondary csv-btn">Importar CSV
+          <input type="file" accept=".csv" (change)="onCsvSelected($event)" />
+        </label>
+        <button *ngIf="productos.length > 0" class="btn-danger" (click)="eliminarTodosLosProductos()" [disabled]="loading">
+          🗑 Eliminar todos ({{ productos.length }})
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-filters">
+      <div class="search-section">
+        <input type="search" [(ngModel)]="searchTerm" placeholder="Buscar productos..." />
+        <small>{{ filteredCount }} resultados</small>
+      </div>
+      <div class="view-controls">
+        <div class="select-group">
+          <label>Ver como:
+            <select [(ngModel)]="viewMode">
+              <option value="grid">Grid</option>
+              <option value="table">Tabla</option>
+            </select>
+          </label>
+        </div>
+        <div class="select-group">
+          <label>Por página:
+            <select [(ngModel)]="pageSize" (ngModelChange)="changePageSize($event)">
+              <option [value]="6">6</option>
+              <option [value]="12">12</option>
+              <option [value]="24">24</option>
+            </select>
+          </label>
+        </div>
+        <div class="pagination-controls">
+          <button (click)="goFirst()">Inicio</button>
+          <button (click)="prevPage()">Anterior</button>
+          <span>Página {{ currentPage }} / {{ totalPages() }}</span>
+          <button (click)="nextPage()">Siguiente</button>
+          <button (click)="goLast()">Última</button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="csvUploading" class="csv-import-status">
+      <div class="csv-import-spinner"></div>
+      <div class="csv-import-text">
+        <strong>Importando productos por CSV</strong>
+        <p>Procesando {{ csvProcessedRows }} de {{ csvTotalRows }} filas</p>
+      </div>
+      <div class="csv-progress-bar">
+        <div class="csv-progress-fill" [style.width.%]="csvProgress"></div>
+      </div>
+      <div class="csv-progress-value">{{ csvProgress }}%</div>
+    </div>
+
+    <div *ngIf="!csvUploading && csvProgress === 100 && !error && success.includes('Importación completada')" class="csv-import-status csv-import-success">
+      <div class="csv-import-check">✓</div>
+      <div class="csv-import-text">
+        <strong>Importación completada</strong>
+        <p>{{ csvImportedCount }} producto(s) creado(s) correctamente.</p>
+      </div>
+    </div>
+
+    <div *ngIf="!csvUploading && csvProgress === 100 && csvFailedCount > 0" class="csv-import-status csv-import-warning">
+      <div class="csv-import-check csv-import-check-warn">!</div>
+      <div class="csv-import-text">
+        <strong>Importación finalizada con errores</strong>
+        <p>{{ csvImportedCount }} creado(s) · {{ csvFailedCount }} con error.</p>
+        <details>
+          <summary>Ver detalles (primer error)</summary>
+          <code>{{ csvErrors[0] }}</code>
+        </details>
+      </div>
     </div>
 
     <!-- Alertas -->
@@ -43,6 +126,16 @@
             type="text" 
             [(ngModel)]="form.nombre" 
             placeholder="Ej: Laptop Dell"
+            [disabled]="loading"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>SKU / Código</label>
+          <input
+            type="text"
+            [(ngModel)]="form.sku"
+            placeholder="Ej: S8001P"
             [disabled]="loading"
           />
         </div>
@@ -108,25 +201,38 @@
       </div>
 
       <div class="form-group">
-        <label>Subir Imágenes (1 a 5)</label>
-        <input 
-          type="file" 
-          multiple 
-          accept="image/*"
-          (change)="onFileSelected($event)"
-          [disabled]="loading || uploading"
-          #fileInput
-        />
-        <p class="file-info">{{ selectedFiles.length }} archivo(s) seleccionado(s)</p>
-        <small class="text-muted">Selecciona entre 1 y 5 imágenes para el producto</small>
+        <label>Características</label>
+        <textarea
+          [(ngModel)]="form.caracteristicas"
+          placeholder="Características principales"
+          rows="4"
+          [disabled]="loading"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>URLs de Imágenes (1 a 5)</label>
+        <div class="url-list">
+          <div class="url-row" *ngFor="let url of imageUrlFields; let i = index">
+            <span class="url-index">URL {{ i + 1 }}</span>
+            <input
+              type="url"
+              [ngModel]="imageUrlFields[i]"
+              (ngModelChange)="onImageUrlChanged(i, $event)"
+              placeholder="https://ejemplo.com/imagen.jpg"
+              [disabled]="loading"
+            />
+          </div>
+        </div>
+        <small class="text-muted">Usa enlaces directos http(s). Máximo 5 imágenes por producto.</small>
       </div>
 
       <button 
         class="btn-save" 
         (click)="guardarProducto()"
-        [disabled]="loading || uploading"
+        [disabled]="loading"
       >
-        {{ uploading ? 'Subiendo imágenes...' : loading ? 'Guardando...' : 'Guardar Producto' }}
+        {{ loading ? 'Guardando...' : 'Guardar Producto' }}
       </button>
     </div>
 
@@ -138,8 +244,9 @@
         No hay productos aún. Crea el primero!
       </div>
 
-      <div *ngIf="productos.length > 0" class="products-grid">
-        <div *ngFor="let producto of productos" class="product-card">
+      <div *ngIf="productos.length > 0">
+        <div *ngIf="viewMode === 'grid'" class="products-grid">
+          <div *ngFor="let producto of filteredProducts" class="product-card">
           <div class="product-images">
             <div *ngIf="producto.imagenes && producto.imagenes.length > 0" class="images-grid">
               <div *ngFor="let img of producto.imagenes.slice(0, 3); let last = last; let i = index" class="image-item">
@@ -166,9 +273,13 @@
               <h4>{{ producto.nombre }}</h4>
               <span class="product-id">#{{ producto.id?.substring(0, 8) }}</span>
             </div>
+
+            <p class="sku-line" *ngIf="producto.sku || producto.codigo">
+              SKU: <strong>{{ producto.sku || producto.codigo }}</strong>
+            </p>
             
             <p class="category" *ngIf="producto.categoriaId">
-              <i class="fas fa-tag"></i> {{ producto.categoriaId }}
+              <i class="fas fa-tag"></i> {{ getCategoriaNombre(producto.categoriaId) }}
             </p>
             
             <p class="description" *ngIf="producto.descripcion; else noDescription">
@@ -206,12 +317,78 @@
               Eliminar
             </button>
           </div>
+          </div>
+        </div>
+
+        <div *ngIf="viewMode === 'table'" class="table-view">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Imagen</th>
+                <th>SKU</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Categoría</th>
+                <th>Oferta</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let producto of filteredProducts">
+                <td class="td-image"><img *ngIf="producto.imagenes && producto.imagenes[0]" [src]="producto.imagenes[0]" alt="" style="width:60px;height:40px;object-fit:cover"/></td>
+                <td>{{ producto.sku || producto.codigo || '-' }}</td>
+                <td>
+                  <div *ngIf="!editedRows[producto.id || '']">{{ producto.nombre }}</div>
+                  <input *ngIf="editedRows[producto.id || '']" [(ngModel)]="editedRows[producto.id || ''].nombre" />
+                </td>
+                <td>
+                  <div *ngIf="!editedRows[producto.id || '']">Q.{{ producto.precio | number:'1.2-2' }}</div>
+                  <input *ngIf="editedRows[producto.id || '']" type="number" step="0.01" [(ngModel)]="editedRows[producto.id || ''].precio" />
+                </td>
+                <td>
+                  <div *ngIf="!editedRows[producto.id || '']">{{ producto.cantidad }}</div>
+                  <input *ngIf="editedRows[producto.id || '']" type="number" [(ngModel)]="editedRows[producto.id || ''].cantidad" />
+                </td>
+                <td>
+                  <div *ngIf="!editedRows[producto.id || '']">{{ getCategoriaNombre(producto.categoriaId) }}</div>
+                  <select *ngIf="editedRows[producto.id || '']" [(ngModel)]="editedRows[producto.id || ''].categoriaId">
+                    <option value="">Sin categoría</option>
+                    <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nombre }}</option>
+                  </select>
+                </td>
+                <td>
+                  <div *ngIf="!editedRows[producto.id || '']">{{ producto.oferta == 1 ? 'Sí' : 'No' }}</div>
+                  <select *ngIf="editedRows[producto.id || '']" [(ngModel)]="editedRows[producto.id || ''].oferta">
+                    <option [value]="0">No</option>
+                    <option [value]="1">Sí</option>
+                  </select>
+                </td>
+                <td>
+                  <div *ngIf="!editedRows[producto.id || '']">
+                    <button (click)="startEdit(producto)">Editar</button>
+                    <button (click)="eliminarProducto(producto.id!)">Eliminar</button>
+                  </div>
+                  <div *ngIf="editedRows[producto.id || '']">
+                    <button (click)="saveEdit(producto.id!)">Guardar</button>
+                    <button (click)="cancelEdit(producto.id!)">Cancelar</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
+    <div class="pagination" *ngIf="totalPages() > 1">
+      <button (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
+      <button *ngFor="let p of [].constructor(totalPages()); let i = index" (click)="setPage(i+1)" [class.active]="currentPage === (i+1)">{{ i+1 }}</button>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages()">Siguiente</button>
+    </div>
+    </div>
 
     <!-- Sección de Categorías -->
-    <div class="categories-section">
+    <div *ngIf="activeTab === 'categorias'" class="categories-section">
       <div class="header-section">
         <h2>Gestionar Categorías</h2>
         <button 
@@ -247,16 +424,37 @@
 
       <!-- Lista de Categorías -->
       <div class="categories-list">
-        <h3>Categorías ({{ categorias.length }})</h3>
+        <div class="categories-list-header">
+          <h3>Categorías ({{ categorias.length }})</h3>
+          <input
+            type="text"
+            [(ngModel)]="categorySearchTerm"
+            placeholder="Buscar categoría..."
+            [disabled]="loading"
+            class="category-search"
+          />
+        </div>
+        <p class="category-hint" *ngIf="categorySearchTerm.trim()">
+          Mostrando {{ sortedFilteredCategorias.length }} resultado(s) para "{{ categorySearchTerm.trim() }}"
+        </p>
         
         <div *ngIf="categorias.length === 0" class="no-categories">
           No hay categorías aún. Crea la primera!
         </div>
 
         <div *ngIf="categorias.length > 0" class="categories-grid">
-          <div *ngFor="let categoria of categorias" class="category-card">
-            <div class="category-info">
-              <h4>{{ categoria.nombre }}</h4>
+          <div *ngFor="let categoria of sortedFilteredCategorias" class="category-card">
+            <div class="category-head">
+              <div class="category-avatar">{{ (categoria.nombre || '?').charAt(0).toUpperCase() }}</div>
+              <div class="category-info">
+                <h4>{{ categoria.nombre }}</h4>
+                <p class="category-meta" *ngIf="categoria.createdAt">Creada: {{ categoria.createdAt | date:'dd/MM/yyyy' }}</p>
+                <p class="category-meta" *ngIf="!categoria.createdAt">Categoría personalizada</p>
+              </div>
+            </div>
+
+            <div class="category-stats">
+              <span class="category-chip">{{ getCategoriaProductCount(categoria.id) }} producto(s)</span>
             </div>
 
             <div class="category-actions">
@@ -273,7 +471,7 @@
     </div>
 
     <!-- Sección de Ofertas -->
-    <div *ngIf="showOfertaForm" class="section">
+    <div *ngIf="activeTab === 'ofertas'" class="section">
       <div class="header-section">
         <h2>Gestionar Ofertas</h2>
         <button
@@ -285,7 +483,7 @@
       </div>
 
       <!-- Formulario de Oferta -->
-      <div class="form-section">
+      <div *ngIf="showOfertaForm" class="form-section">
         <h3>{{ editingOfertaId ? 'Editar' : 'Crear' }} Oferta</h3>
 
         <div class="form-grid">
@@ -407,6 +605,128 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Sección de Pedidos -->
+    <div *ngIf="activeTab === 'pedidos'" class="section pedidos-section">
+      <div class="header-section">
+        <h2>Pedidos Recibidos</h2>
+        <button class="btn-secondary" (click)="loadPedidos()">Actualizar</button>
+      </div>
+
+      <div class="pedidos-summary">
+        <div class="pedidos-kpi">
+          <span>Total pedidos</span>
+          <strong>{{ pedidos.length }}</strong>
+        </div>
+        <div class="pedidos-kpi">
+          <span>Nuevos</span>
+          <strong>{{ getEstadoCount('nuevo') }}</strong>
+        </div>
+        <div class="pedidos-kpi">
+          <span>Total vendido</span>
+          <strong>Q.{{ pedidoTotalGeneral | number:'1.2-2' }}</strong>
+        </div>
+      </div>
+
+      <div *ngIf="pedidos.length === 0" class="no-products">
+        Aún no hay pedidos registrados.
+      </div>
+
+      <div *ngIf="pedidos.length > 0" class="table-view">
+        <table class="admin-table pedidos-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Orden</th>
+              <th>Cliente</th>
+              <th>Contacto</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Estado</th>
+              <th>Detalle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let pedido of pedidos">
+              <tr>
+                <td>{{ pedido.createdAt ? (pedido.createdAt | date:'dd/MM/yyyy HH:mm') : '-' }}</td>
+                <td><strong>{{ getPedidoFolio(pedido) }}</strong></td>
+                <td>
+                  <strong>{{ pedido.facturacion.nombre }} {{ pedido.facturacion.apellido }}</strong>
+                  <div class="pedido-sub">{{ pedido.facturacion.direccion }}</div>
+                </td>
+                <td>
+                  <div>{{ pedido.facturacion.email }}</div>
+                  <div class="pedido-sub">{{ pedido.facturacion.telefono }}</div>
+                </td>
+                <td>{{ getPedidoItemsCount(pedido) }}</td>
+                <td>Q.{{ pedido.total | number:'1.2-2' }}</td>
+                <td>
+                  <span class="oferta-status" [class.active]="(pedido.estado || 'nuevo') === 'nuevo'" [class.inactive]="(pedido.estado || 'nuevo') !== 'nuevo'">
+                    {{ pedido.estado || 'nuevo' }}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn-secondary btn-pedido-detalle" (click)="togglePedidoDetalle(pedido.id)">
+                    {{ isPedidoExpanded(pedido.id) ? 'Ocultar' : 'Ver' }}
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="isPedidoExpanded(pedido.id)">
+                <td colspan="8" class="pedido-detail-cell">
+                  <div class="pedido-detail-card">
+                    <div class="pedido-detail-head">
+                      <div class="pedido-folio-title">Orden interna: {{ getPedidoFolio(pedido) }}</div>
+                      <button class="btn-primary btn-pedido-pdf" (click)="exportPedidoPdf(pedido)">Exportar PDF</button>
+                    </div>
+                    <div class="pedido-detail-grid">
+                      <div>
+                        <h4>Productos solicitados</h4>
+                        <table class="pedido-items-table">
+                          <thead>
+                            <tr>
+                              <th>Producto</th>
+                              <th>Cant.</th>
+                              <th>Precio</th>
+                              <th>Subtotal</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let item of pedido.items">
+                              <td>{{ item.nombre }}</td>
+                              <td>{{ item.cantidad }}</td>
+                              <td>Q.{{ item.precio | number:'1.2-2' }}</td>
+                              <td>Q.{{ (item.precio * item.cantidad) | number:'1.2-2' }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div class="pedido-resumen">
+                          <p>Subtotal: <strong>Q.{{ pedido.subtotal | number:'1.2-2' }}</strong></p>
+                          <p>Envío: <strong>Q.{{ pedido.envioCosto | number:'1.2-2' }}</strong></p>
+                          <p>Total: <strong>Q.{{ pedido.total | number:'1.2-2' }}</strong></p>
+                        </div>
+                      </div>
+                      <div class="pedido-datos">
+                        <h4>Facturación</h4>
+                        <p>{{ pedido.facturacion.nombre }} {{ pedido.facturacion.apellido }}</p>
+                        <p>{{ pedido.facturacion.email }}</p>
+                        <p>{{ pedido.facturacion.telefono }}</p>
+                        <p>{{ pedido.facturacion.direccion }}</p>
+
+                        <h4>Envío</h4>
+                        <p>{{ pedido.envio.nombre }} {{ pedido.envio.apellido }}</p>
+                        <p>{{ pedido.envio.telefono }}</p>
+                        <p>{{ pedido.envio.direccion }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { FirebaseService, Producto } from './firebase.service';
@@ -9,13 +8,16 @@ export interface Product {
   nombre: string;
   descripcion: string;
   precio: number;
+  sku?: string;
+  codigo?: string;
   imagen?: string;
   imagenes?: string[];
   oferta?: number | boolean;
   cantidad?: number;
   categoria?: string;
+  categoriaId?: string;
   precioOferta?: number;
-  idCategoria?: number;
+  idCategoria?: string;
   createdAt?: number;
 }
 
@@ -23,12 +25,10 @@ export interface Product {
   providedIn: 'root'
 })
 export class ProductService {
-  private URL = 'https://docs.google.com/spreadsheets/d/1SdVsKRC4nmpKQdDbcVqmGu-6Sa_XMHWFVBrlKAk2QJo/gviz/tq?tqx=out:json&sheet=';
   private productsSubject = new BehaviorSubject<Product[]>([]);
   public products$ = this.productsSubject.asObservable();
 
   constructor(
-    private http: HttpClient,
     private firebaseService: FirebaseService
   ) {
     this.loadProducts();
@@ -43,13 +43,16 @@ export class ProductService {
           nombre: fp.nombre,
           descripcion: fp.descripcion,
           precio: fp.precio,
+          sku: fp.sku || fp.codigo || '',
+          codigo: fp.codigo || fp.sku || '',
           imagenes: fp.imagenes || [],
           imagen: fp.imagenes?.[0] || '',
           oferta: fp.oferta,
           precioOferta: fp.precioOferta,
-          categoria: fp.categoriaId, // assuming categoriaId is the id
+          categoria: fp.categoriaId || '',
+          categoriaId: fp.categoriaId || '',
           cantidad: fp.cantidad || 0,
-          idCategoria: fp.categoriaId ? +fp.categoriaId : 0,
+          idCategoria: fp.categoriaId || '',
           createdAt: fp.createdAt
         }));
         this.productsSubject.next(products);

@@ -1,5 +1,7 @@
 export const environment = {
   production: false,
+  pedidosNotificationWebhookUrl: '',
+  pedidosNotificationToken: '',
   firebase: {
     apiKey: "AIzaSyBNG9XFCD1zy5Xn_Ig8n3hYi1RreuZHnkg",
     authDomain: "almacendigital-a63a4.firebaseapp.com",

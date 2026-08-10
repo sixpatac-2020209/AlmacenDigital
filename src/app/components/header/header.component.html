@@ -1,33 +1,15 @@
     <!-- Topbar Start -->
     <div class="container-fluid">
         <div class="row bg-secondary py-2 px-xl-5">
-            <div class="col-lg-6 d-none d-lg-block">
-                <div class="d-inline-flex align-items-center">
-                    <a class="text-dark" href="">Preguntas frecuentes</a>
-                    <span class="text-muted px-2">|</span>
-                    <a class="text-dark" href="">Ayuda</a>
-                    <span class="text-muted px-2">|</span>
-                    <a class="text-dark" href="">Soporte</a>
-                </div>
-            </div>
-            <div class="col-lg-6 text-center text-lg-right">
-                <div class="d-inline-flex align-items-center">
+            <div class="col-12 text-right">
+                <div class="d-inline-flex align-items-center justify-content-end w-100">
                     <a class="text-dark px-2" href="">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <!-- <a class="text-dark px-2" href="">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a class="text-dark px-2" href="">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a> -->
                     <a class="text-dark px-2" href="">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <!-- <a class="text-dark pl-2" href="">
-                        <i class="fab fa-youtube"></i>
-                    </a> -->
-                    <a routerLink="/admin/login" class="text-dark px-2" title="Panel de Admin">
+                    <a *ngIf="showAdminLogin" routerLink="/admin/login" class="text-dark px-2" title="Panel de Admin">
                         <i class="fas fa-lock"></i>
                     </a>
                     <button class="btn btn-link text-dark px-2" (click)="toggleDarkMode()" title="Cambiar modo">
@@ -62,7 +44,7 @@
                 </a>
                 <a routerLink="/cart" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">{{ totalItems }}</span>
+                    <span class="badge">{{ (totalItems$ | async) ?? 0 }}</span>
                 </a>
             </div>
         </div>
@@ -100,8 +82,8 @@
                             <a routerLink="/contact" [class.active]="currentRoute === '/contact'" class="nav-item nav-link">Contacto</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
-                            <a href="" class="nav-item nav-link" style="visibility: hidden;">Login</a>
-                            <a href="" class="nav-item nav-link" style="visibility: hidden;">Register</a>
+                            <!-- <a href="" class="nav-item nav-link" style="visibility: hidden;">Login</a>
+                            <a href="" class="nav-item nav-link" style="visibility: hidden;">Register</a> -->
                         </div>
                     </div>
                 </nav>

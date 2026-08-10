@@ -14,6 +14,9 @@
 <div class="container-fluid pt-5 pb-5">
     <div class="row px-xl-5">
         <div class="col-lg-8">
+            <div *ngIf="pedidoRealizado" class="alert alert-success" style="border-radius: 10px; margin-bottom: 20px; font-weight: 600;">
+                {{ estadoPedidoMensaje }}
+            </div>
             <div style="background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); padding: 30px; margin-bottom: 25px;">
                 <div style="display: flex; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #007bff;">
                     <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-right: 15px;">1</div>
@@ -96,8 +99,19 @@
                     </div>
                 </div>
                 <div style="padding: 20px; background: #f8f9fa; border-top: 1px solid #e9ecef;">
-                    <button (click)="enviarPedido()" class="btn btn-primary btn-block py-3" style="font-weight: 600; border-radius: 8px;">
-                        <i class="fa fa-lock mr-2"></i>Realizar pedido
+                    <button
+                        (click)="enviarPedido()"
+                        [disabled]="pedidoRealizado || enviandoPedido"
+                        class="btn btn-primary btn-block py-3"
+                        style="font-weight: 600; border-radius: 8px;">
+                        <i class="fa fa-check mr-2"></i>Confirmar pedido
+                    </button>
+                    <button
+                        *ngIf="pedidoRealizado"
+                        (click)="descargarOrdenCompra()"
+                        class="btn btn-outline-secondary btn-block py-2 mt-2"
+                        style="font-weight: 600; border-radius: 8px;">
+                        <i class="fa fa-download mr-2"></i>Descargar orden de compra
                     </button>
                 </div>
             </div>

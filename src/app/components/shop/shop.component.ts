@@ -1,102 +1,183 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from '../../services/product.service';
+import { ProductService, Product } from '../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
 import Swal from 'sweetalert2';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { FirebaseService } from '../../services/firebase.service';
+import { Categoria } from '../../services/firebase.service';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-shop',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './shop.component.html',
-  styles: []
+  styleUrls: ['./shop.component.css']
 })
 export class ShopComponent implements OnInit {
+  products: Product[] = [];
+  productosFiltrados: Product[] = [];
+  categorias: Categoria[] = [];
 
-  products: any[] = [];
-  productosFiltrados: any[] = [];
-
-  categorias: any[] = [];
-  categoriaSeleccionada: number | null = null;
-
+  categoriaSeleccionada: string = '';
   precioMin: number = 0;
-  precioMax: number = 999999;
+  precioMax: number = 0;
+  precioMaxDisponible: number = 0;
 
   busqueda: string = '';
+  sortBy: 'recent' | 'priceAsc' | 'priceDesc' | 'nameAsc' = 'recent';
+  soloOfertas = false;
+  soloDisponibles = false;
   loading: boolean = true;
 
   constructor(
     private productService: ProductService,
     private cartService: CartService,
     private router: Router,
-    private route: ActivatedRoute,
-    private firebaseService: FirebaseService
+    private route: ActivatedRoute
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loading = true;
 
-    this.productService.getProductsObservable().subscribe((data: any) => {
-      // Verificar si se debe ordenar por reciente
-      this.route.queryParams.subscribe(params => {
-        if (params['sortByRecent'] === 'true') {
-          // Ordenar de más reciente a más viejo
-          this.products = data
-            .filter((p: any) => p.createdAt)
-            .sort((a: any, b: any) => (b.createdAt || 0) - (a.createdAt || 0));
-        } else {
-          this.products = data;
-        }
-      });
-      
-      this.productosFiltrados = this.products;
+    combineLatest([
+      this.productService.getProductsObservable(),
+      this.route.queryParams
+    ]).subscribe(([data, params]) => {
+      this.products = data || [];
+      this.setFiltersFromQueryParams(params as Record<string, string>);
+      this.syncPriceRangeWithProducts();
+      this.filtrarProductos();
       this.loading = false;
-      this.checkQueryParams();
     });
 
     this.productService.getCategorias().subscribe(data => {
-      this.categorias = data;
+      this.categorias = [...(data || [])].sort((a, b) => (a.nombre || '').localeCompare(b.nombre || '', 'es', { sensitivity: 'base' }));
     });
   }
 
-  checkQueryParams() {
-    this.route.queryParams.subscribe(params => {
-      const categoriaId = params['categoria'];
-      const searchQuery = params['q'];
+  private setFiltersFromQueryParams(params: Record<string, string>): void {
+    const categoriaId = params['categoria'];
+    const searchQuery = params['q'];
 
-      this.categoriaSeleccionada = categoriaId ? +categoriaId : null;
-      this.busqueda = searchQuery ? searchQuery : '';
-
-      this.filtrarProductos();
-    });
+    this.categoriaSeleccionada = categoriaId ? String(categoriaId) : '';
+    this.busqueda = searchQuery ? String(searchQuery) : '';
+    if (params['sortByRecent'] === 'true') {
+      this.sortBy = 'recent';
+    }
   }
 
-  filtrarProductos() {
-    const termino = this.busqueda ? this.busqueda.trim().toLowerCase() : '';
+  private syncPriceRangeWithProducts(): void {
+    const precios = this.products
+      .map((p) => Number(p.precio) || 0)
+      .filter((precio) => precio >= 0);
 
-    this.productosFiltrados = this.products.filter(p => {
+    const maxDetectado = precios.length > 0 ? Math.ceil(Math.max(...precios)) : 0;
+    this.precioMaxDisponible = maxDetectado;
 
-      const cumpleCategoria =
-        !this.categoriaSeleccionada ||
-        p.idCategoria == this.categoriaSeleccionada;
+    if (this.precioMax === 0 || this.precioMax > maxDetectado || this.precioMax === 999999) {
+      this.precioMax = maxDetectado;
+    }
 
-      const cumplePrecio =
-        p.precio >= this.precioMin &&
-        p.precio <= this.precioMax;
+    if (this.precioMin > this.precioMax) {
+      this.precioMin = this.precioMax;
+    }
+  }
 
+  private normalizeText(value?: string): string {
+    return (value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+  }
+
+  private precioVisual(product: Product): number {
+    const tieneOferta = (product.oferta === 1 || product.oferta === true)
+      && !!product.precioOferta
+      && Number(product.precioOferta) < Number(product.precio);
+    return tieneOferta ? Number(product.precioOferta) : Number(product.precio);
+  }
+
+  filtrarProductos(): void {
+    const termino = this.normalizeText(this.busqueda);
+
+    const filtrados = this.products.filter(p => {
+      const categoriaProducto = String(p.categoriaId || p.categoria || p.idCategoria || '');
+      const nombre = this.normalizeText(p.nombre);
+      const descripcion = this.normalizeText(p.descripcion);
+      const sku = this.normalizeText(p.sku || p.codigo || '');
+      const precio = Number(p.precio) || 0;
+      const cantidad = Number(p.cantidad) || 0;
+      const tieneOferta = (p.oferta === 1 || p.oferta === true)
+        && !!p.precioOferta
+        && Number(p.precioOferta) < Number(p.precio);
+
+      const cumpleCategoria = !this.categoriaSeleccionada || categoriaProducto === this.categoriaSeleccionada;
+      const cumplePrecio = precio >= this.precioMin && precio <= this.precioMax;
       const cumpleBusqueda =
         !termino ||
-        p.nombre?.toLowerCase().includes(termino) ||
-        p.descripcion?.toLowerCase().includes(termino);
+        nombre.includes(termino) ||
+        descripcion.includes(termino) ||
+        sku.includes(termino);
+      const cumpleOferta = !this.soloOfertas || tieneOferta;
+      const cumpleStock = !this.soloDisponibles || cantidad > 0;
 
-      return cumpleCategoria && cumplePrecio && cumpleBusqueda;
+      return cumpleCategoria && cumplePrecio && cumpleBusqueda && cumpleOferta && cumpleStock;
     });
+
+    this.productosFiltrados = this.ordenarProductos(filtrados);
   }
 
-  addToCart(product: any) {
+  private ordenarProductos(items: Product[]): Product[] {
+    const list = [...items];
+    list.sort((a, b) => {
+      if (this.sortBy === 'priceAsc') {
+        return this.precioVisual(a) - this.precioVisual(b);
+      }
+
+      if (this.sortBy === 'priceDesc') {
+        return this.precioVisual(b) - this.precioVisual(a);
+      }
+
+      if (this.sortBy === 'nameAsc') {
+        return (a.nombre || '').localeCompare((b.nombre || ''), 'es', { sensitivity: 'base' });
+      }
+
+      return (b.createdAt || 0) - (a.createdAt || 0);
+    });
+    return list;
+  }
+
+  aplicarBusqueda(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { q: this.busqueda.trim() || null },
+      queryParamsHandling: 'merge'
+    });
+    this.filtrarProductos();
+  }
+
+  onCategoriaChange(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { categoria: this.categoriaSeleccionada || null },
+      queryParamsHandling: 'merge'
+    });
+    this.filtrarProductos();
+  }
+
+  onSortChange(): void {
+    this.filtrarProductos();
+  }
+
+  clearBusqueda(): void {
+    this.busqueda = '';
+    this.aplicarBusqueda();
+  }
+
+  addToCart(product: Product): void {
     this.cartService.addProduct(product);
     Swal.fire({
       title: '¡Producto agregado al carrito!',
@@ -119,10 +200,21 @@ export class ShopComponent implements OnInit {
     });
   }
 
-  limpiarFiltros() {
-    this.categoriaSeleccionada = null;
+  limpiarFiltros(): void {
+    this.categoriaSeleccionada = '';
     this.precioMin = 0;
-    this.precioMax = 999999;
-    this.productosFiltrados = this.products;
+    this.precioMax = this.precioMaxDisponible;
+    this.busqueda = '';
+    this.soloOfertas = false;
+    this.soloDisponibles = false;
+    this.sortBy = 'recent';
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { q: null, categoria: null, sortByRecent: null },
+      queryParamsHandling: 'merge'
+    });
+
+    this.filtrarProductos();
   }
 }

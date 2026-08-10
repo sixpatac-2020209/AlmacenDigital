@@ -1,0 +1,5 @@
+01.jpg | https://img.pacifiko.com/PROD/resize/0/1000x1000/6e242fb2-9736-4521-ba6b-6800e0dc49621714682443.jpg
+02.jpg | https://img.pacifiko.com/PROD/resize/0/1000x1000/1dfae08e-59a0-4b0d-81cc-698631b395561714682448.jpg
+03.jpg | https://cdn.pacifiko.com/image/catalog/copiar-enlace_share.png
+04.jpg | https://cdn.pacifiko.com/image/catalog/Ficohsa_logo.png
+05.jpg | https://cdn.pacifiko.com/image/catalog/pacifiko/Bac_cuotas_logo.png

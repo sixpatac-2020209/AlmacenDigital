@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface CartItem {
   id: number | string;
@@ -14,6 +15,8 @@ export interface CartItem {
 export class CartService {
 
   private KEY = 'carrito';
+  private totalItemsSubject = new BehaviorSubject<number>(this.getTotalItems());
+  totalItems$: Observable<number> = this.totalItemsSubject.asObservable();
 
   // 🔹 Obtener carrito
   getCart(): CartItem[] {
@@ -23,6 +26,7 @@ export class CartService {
   // 🔹 Guardar carrito
   private saveCart(cart: CartItem[]) {
     localStorage.setItem(this.KEY, JSON.stringify(cart));
+    this.totalItemsSubject.next(this.calculateTotalItems(cart));
   }
 
   // 🔹 Agregar producto
@@ -83,12 +87,16 @@ export class CartService {
 
   // 🔹 TOTAL DE PRODUCTOS (🔥 ESTE ES EL QUE QUIERES)
   getTotalItems(): number {
-    return this.getCart()
-      .reduce((total, p) => total + (p.cantidad || 0), 0);
+    return this.calculateTotalItems(this.getCart());
+  }
+
+  private calculateTotalItems(cart: CartItem[]): number {
+    return cart.reduce((total, p) => total + (p.cantidad || 0), 0);
   }
 
   // 🔹 Vaciar carrito
   clear() {
     localStorage.removeItem(this.KEY);
+    this.totalItemsSubject.next(0);
   }
 }

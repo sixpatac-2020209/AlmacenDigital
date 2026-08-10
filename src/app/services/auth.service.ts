@@ -7,6 +7,7 @@ import {
   onAuthStateChanged,
   User
 } from 'firebase/auth';
+import { signInAnonymously } from 'firebase/auth';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -25,6 +26,10 @@ export class AuthService {
 
   register(email: string, password: string): Promise<any> {
     return createUserWithEmailAndPassword(this.auth, email, password);
+  }
+
+  signInAnonymously(): Promise<any> {
+    return signInAnonymously(this.auth);
   }
 
   login(email: string, password: string): Promise<any> {

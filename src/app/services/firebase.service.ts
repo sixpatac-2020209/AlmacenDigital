@@ -1,11 +1,23 @@
 import { Injectable, inject } from '@angular/core';
-import { Database, ref, push, set, get, update, remove, child } from '@angular/fire/database';
+import { Firestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, getDoc } from '@angular/fire/firestore';
 import { Storage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from '@angular/fire/storage';
-import { BehaviorSubject, Observable, from } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export interface Producto {
   id?: string;
+  sku?: string;
+  codigo?: string;
+  productoOriginal?: string;
+  marca?: string;
+  estado?: string;
+  descripcionCatalogo?: string;
+  caracteristicas?: string;
+  especificaciones?: string;
+  fuente?: string;
+  urlFuente?: string;
+  carpetaProducto?: string;
+  imagenesDescargadas?: number;
   nombre: string;
   descripcion: string;
   precio: number;
@@ -23,36 +35,64 @@ export interface Categoria {
   createdAt?: number;
 }
 
+export interface PedidoItem {
+  id: string;
+  nombre: string;
+  precio: number;
+  cantidad: number;
+}
+
+export interface Pedido {
+  id?: string;
+  facturacion: {
+    nombre: string;
+    apellido: string;
+    email: string;
+    telefono: string;
+    direccion: string;
+  };
+  envio: {
+    nombre: string;
+    apellido: string;
+    telefono: string;
+    direccion: string;
+  };
+  items: PedidoItem[];
+  subtotal: number;
+  envioCosto: number;
+  total: number;
+  estado?: string;
+  createdAt?: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseService {
-  private db = inject(Database);
+  private firestore = inject(Firestore);
   private storage = inject(Storage);
   private productosSubject = new BehaviorSubject<Producto[]>([]);
   public productos$ = this.productosSubject.asObservable();
   private categoriasSubject = new BehaviorSubject<Categoria[]>([]);
   public categorias$ = this.categoriasSubject.asObservable();
+  private pedidosSubject = new BehaviorSubject<Pedido[]>([]);
+  public pedidos$ = this.pedidosSubject.asObservable();
 
   constructor() {
     this.loadProductos();
     this.loadCategorias();
+    this.loadPedidos();
   }
 
   // Cargar productos de Firebase
   loadProductos(): void {
-    const dbRef = ref(this.db, 'productos');
-    get(dbRef).then((snapshot: any) => {
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        const productos: Producto[] = Object.keys(data).map(key => ({
-          ...data[key],
-          id: key
-        }));
-        this.productosSubject.next(productos);
-      } else {
-        this.productosSubject.next([]);
-      }
+    const productosCol = collection(this.firestore, 'productos');
+    getDocs(productosCol).then((snapshot) => {
+      const productos: Producto[] = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...(doc.data() as Producto)
+      }));
+      this.productosSubject.next(productos);
     }).catch((error: any) => {
       console.error('Error loading productos:', error);
       this.productosSubject.next([]);
@@ -61,18 +101,13 @@ export class FirebaseService {
 
   // Cargar categorías de Firebase
   loadCategorias(): void {
-    const dbRef = ref(this.db, 'categorias');
-    get(dbRef).then((snapshot: any) => {
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        const categorias: Categoria[] = Object.keys(data).map(key => ({
-          ...data[key],
-          id: key
-        }));
-        this.categoriasSubject.next(categorias);
-      } else {
-        this.categoriasSubject.next([]);
-      }
+    const categoriasCol = collection(this.firestore, 'categorias');
+    getDocs(categoriasCol).then((snapshot) => {
+      const categorias: Categoria[] = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...(doc.data() as Categoria)
+      }));
+      this.categoriasSubject.next(categorias);
     }).catch((error: any) => {
       console.error('Error loading categorias:', error);
       this.categoriasSubject.next([]);
@@ -89,39 +124,59 @@ export class FirebaseService {
     return this.productosSubject.value;
   }
 
-  // Crear producto
-  crearProducto(producto: Producto): Promise<string> {
-    const dbRef = ref(this.db, 'productos');
-    const newRef = push(dbRef);
-    const productId = newRef.key;
+  private normalizeKey(value?: string): string {
+    return (value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .toLowerCase()
+      .trim();
+  }
 
-    return set(newRef, {
-      ...producto,
-      createdAt: Date.now()
-    }).then(() => {
-      this.loadProductos();
-      return productId || '';
+  // Buscar producto por SKU
+  getProductoBySku(sku: string): Promise<Producto | null> {
+    return getDocs(collection(this.firestore, 'productos')).then(snapshot => {
+      const target = this.normalizeKey(sku);
+      const doc = snapshot.docs.find(d => {
+        const data = d.data() as Producto;
+        return this.normalizeKey(data.sku) === target || this.normalizeKey(data.codigo) === target;
+      });
+      if (!doc) return null;
+      return { id: doc.id, ...(doc.data() as Producto) };
+    });
+  }
+
+  // Crear producto
+  crearProducto(producto: Producto, skipReload = false): Promise<string> {
+    const productosCol = collection(this.firestore, 'productos');
+    // Eliminar campos undefined para que Firestore no los rechace
+    const data = Object.fromEntries(
+      Object.entries({ ...producto, createdAt: Date.now() })
+        .filter(([, v]) => v !== undefined)
+    );
+    return addDoc(productosCol, data).then((docRef) => {
+      if (!skipReload) this.loadProductos();
+      return docRef.id;
     });
   }
 
   // Actualizar producto
   actualizarProducto(id: string, producto: Partial<Producto>): Promise<void> {
-    const dbRef = ref(this.db, `productos/${id}`);
-    return update(dbRef, producto).then(() => {
+    const productoDoc = doc(this.firestore, `productos`, id);
+    return updateDoc(productoDoc, producto as any).then(() => {
       this.loadProductos();
     });
   }
 
   // Eliminar producto
   eliminarProducto(id: string): Promise<void> {
-    const dbRef = ref(this.db, `productos/${id}`);
-
-    return get(dbRef).then((snapshot: any) => {
-      const producto = snapshot.exists() ? snapshot.val() : null;
-      const imagenes: string[] = producto?.imagenes || [];
+    const productoDoc = doc(this.firestore, `productos`, id);
+    return getDoc(productoDoc).then((snapshot: any) => {
+      const productoData = snapshot.exists() ? snapshot.data() : null;
+      const imagenes: string[] = productoData?.imagenes || [];
 
       return this.eliminarImagenesProducto(imagenes).then(() => {
-        return remove(dbRef);
+        return deleteDoc(productoDoc);
       });
     }).then(() => {
       this.loadProductos();
@@ -179,6 +234,44 @@ export class FirebaseService {
     return Promise.all(promises);
   }
 
+  // Crear pedido en Firestore
+  crearPedido(pedido: Pedido): Promise<string> {
+    const pedidosCol = collection(this.firestore, 'pedidos');
+    return addDoc(pedidosCol, {
+      ...pedido,
+      estado: pedido.estado || 'nuevo',
+      createdAt: Date.now()
+    }).then(docRef => {
+      this.loadPedidos();
+      return docRef.id;
+    });
+  }
+
+  // Cargar pedidos de Firebase
+  loadPedidos(): void {
+    const pedidosCol = collection(this.firestore, 'pedidos');
+    getDocs(pedidosCol).then((snapshot) => {
+      const pedidos: Pedido[] = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...(doc.data() as Pedido)
+      }));
+      this.pedidosSubject.next(pedidos);
+    }).catch((error: any) => {
+      console.error('Error loading pedidos:', error);
+      this.pedidosSubject.next([]);
+    });
+  }
+
+  // Obtener pedidos como Observable
+  getPedidos(): Observable<Pedido[]> {
+    return this.pedidos$;
+  }
+
+  // Obtener todos los pedidos (sincrónico)
+  getAllPedidos(): Pedido[] {
+    return this.pedidosSubject.value;
+  }
+
   // Obtener categorías como Observable
   getCategorias(): Observable<Categoria[]> {
     return this.categorias$;
@@ -191,31 +284,51 @@ export class FirebaseService {
 
   // Crear categoría
   crearCategoria(categoria: Categoria): Promise<string> {
-    const dbRef = ref(this.db, 'categorias');
-    const newRef = push(dbRef);
-    const categoriaId = newRef.key;
-
-    return set(newRef, {
+    const categoriasCol = collection(this.firestore, 'categorias');
+    return addDoc(categoriasCol, {
       ...categoria,
       createdAt: Date.now()
-    }).then(() => {
+    }).then((docRef) => {
       this.loadCategorias();
-      return categoriaId || '';
+      return docRef.id;
+    });
+  }
+
+  // Obtener categorías desde Firestore una sola vez
+  getCategoriasSnapshot(): Promise<Categoria[]> {
+    const categoriasCol = collection(this.firestore, 'categorias');
+    return getDocs(categoriasCol).then((snapshot) => {
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...(doc.data() as Categoria)
+      }));
+    });
+  }
+
+  // Asegurar que una categoría exista y devolver su ID
+  asegurarCategoria(nombre: string): Promise<string> {
+    const target = (nombre || '').trim().toLowerCase();
+    return this.getCategoriasSnapshot().then((categorias) => {
+      const existente = categorias.find(categoria => (categoria.nombre || '').trim().toLowerCase() === target);
+      if (existente?.id) {
+        return existente.id;
+      }
+      return this.crearCategoria({ nombre }).then((id) => id);
     });
   }
 
   // Actualizar categoría
   actualizarCategoria(id: string, categoria: Partial<Categoria>): Promise<void> {
-    const dbRef = ref(this.db, `categorias/${id}`);
-    return update(dbRef, categoria).then(() => {
+    const categoriaDoc = doc(this.firestore, `categorias`, id);
+    return updateDoc(categoriaDoc, categoria as any).then(() => {
       this.loadCategorias();
     });
   }
 
   // Eliminar categoría
   eliminarCategoria(id: string): Promise<void> {
-    const dbRef = ref(this.db, `categorias/${id}`);
-    return remove(dbRef).then(() => {
+    const categoriaDoc = doc(this.firestore, `categorias`, id);
+    return deleteDoc(categoriaDoc).then(() => {
       this.loadCategorias();
     });
   }

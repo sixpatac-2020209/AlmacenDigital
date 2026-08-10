@@ -1,0 +1,5 @@
+01.jpg | https://hiraoka.com.pe/media/catalog/product/1/2/129556_1.jpg?quality=85&bg-color=255,255,255&fit=bounds&height=265&width=265&canvas=265:265
+02.jpg | https://hiraoka.com.pe/media/wysiwyg/banner_beneficios.png
+03.jpg | https://hiraoka.com.pe/media/wysiwyg/Mobile_banner_beneficios.png
+04.jpg | https://hiraoka.com.pe/media/catalog/product/1/2/129556_1.jpg?quality=85&bg-color=255,255,255&fit=bounds&height=560&width=700&canvas=700:560
+05.jpg | https://samsung-bolivia.s3.amazonaws.com/product-family-item-image-image/square/product-family-item-image-image_nkBFLMcmK8YbrJUs94hX.png

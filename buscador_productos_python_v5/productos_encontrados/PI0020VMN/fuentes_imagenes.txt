@@ -1,0 +1,5 @@
+01.jpg | https://cdn.shopify.com/s/files/1/1161/3498/files/Canvasfotosconguias_7_2_1_24_6eea2362-63a2-4d87-8848-1cd8e930094d_large.jpg?v=1735864344&width=210&height=210&crop=center
+02.jpg | https://cdn.shopify.com/s/files/1/1161/3498/files/CONGUIAS_2_-2025-02-28T160632.881_large.jpg?v=1741698814&width=210&height=210&crop=center
+03.jpg | https://cdn.shopify.com/s/files/1/1161/3498/files/XiaomiBasculaInteligenteScaleS400_large.jpg?v=1730928232&width=210&height=210&crop=center
+04.jpg | https://cdn.shopify.com/s/files/1/1161/3498/files/Canvasfotosconguias_7_2_1_26_d2da6cfb-57eb-4c80-bfe7-c2df5d5fdf90_large.jpg?v=1770324775&width=210&height=210&crop=center
+05.jpg | https://cdn.shopify.com/s/files/1/1161/3498/files/XiaomiSmartwatchRedmiWatch5Active57760_3_large.jpg?v=1765904403&width=210&height=210&crop=center

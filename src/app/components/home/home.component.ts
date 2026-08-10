@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { OfertasService } from '../../services/ofertas.service';
@@ -17,6 +17,8 @@ import { CartService } from '../../services/cart.service';
 export class HomeComponent implements OnInit {
   ofertas: Oferta[] = [];
   productosRecientes: Product[] = [];
+  recentSlide = 0;
+  recentVisibleCount = 4;
 
   constructor(
     private ofertasService: OfertasService,
@@ -26,8 +28,52 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.updateRecentVisibleCount();
     this.loadOfertasActivas();
     this.loadProductosRecientes();
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.updateRecentVisibleCount();
+  }
+
+  get recentPages(): Product[][] {
+    const items: Product[][] = [];
+    for (let i = 0; i < this.productosRecientes.length; i += this.recentVisibleCount) {
+      items.push(this.productosRecientes.slice(i, i + this.recentVisibleCount));
+    }
+    return items;
+  }
+
+  get hasRecentCarouselControls(): boolean {
+    return this.recentPages.length > 1;
+  }
+
+  prevRecentSlide(): void {
+    this.recentSlide = Math.max(0, this.recentSlide - 1);
+  }
+
+  nextRecentSlide(): void {
+    this.recentSlide = Math.min(this.recentPages.length - 1, this.recentSlide + 1);
+  }
+
+  goToRecentSlide(index: number): void {
+    this.recentSlide = Math.max(0, Math.min(this.recentPages.length - 1, index));
+  }
+
+  private updateRecentVisibleCount(): void {
+    const width = window.innerWidth;
+    if (width < 576) {
+      this.recentVisibleCount = 1;
+    } else if (width < 992) {
+      this.recentVisibleCount = 2;
+    } else if (width < 1200) {
+      this.recentVisibleCount = 3;
+    } else {
+      this.recentVisibleCount = 4;
+    }
+    this.recentSlide = Math.min(this.recentSlide, Math.max(this.recentPages.length - 1, 0));
   }
 
   loadOfertasActivas(): void {
@@ -39,6 +85,7 @@ export class HomeComponent implements OnInit {
   loadProductosRecientes(): void {
     this.productService.getLatestProducts().subscribe((productos) => {
       this.productosRecientes = productos;
+      this.recentSlide = 0;
     });
   }
 
