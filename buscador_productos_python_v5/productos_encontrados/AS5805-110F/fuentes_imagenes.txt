@@ -1,5 +1,0 @@
-01.jpg | https://m.media-amazon.com/images/G/33/gno/sprites/nav-sprite-global-1x-reorg-privacy._CB546817445_.png
-02.jpg | https://m.media-amazon.com/images/G/33/marketing/prime/2022PrimeBrand/Logos/Prime_Logo_RGB_Prime_Blue_MASTER._CB542734779_.png
-03.jpg | https://m.media-amazon.com/images/S/aplus-media-library-service-media/b15387a6-c58a-40d0-806e-81dab58752b9.__CR0,52,1800,557_PT0_SX970_V1___.png
-04.jpg | https://m.media-amazon.com/images/S/aplus-media-library-service-media/35d57563-557a-4d20-aa01-15f338b2e63a.__CR0,0,800,800_PT0_SX300_V1___.png
-05.jpg | https://m.media-amazon.com/images/S/aplus-media-library-service-media/bbb8cfe1-e10d-435a-bad5-d29168de76ad.__CR0,0,220,220_PT0_SX220_V1___.jpg

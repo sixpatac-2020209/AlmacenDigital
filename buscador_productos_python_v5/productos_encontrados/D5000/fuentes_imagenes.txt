@@ -1,5 +1,0 @@
-01.jpg | https://img.pacifiko.com/PROD/resize/0/1000x1000/d04becba-8839-4a0f-889a-a3dd6eadc0991719024713.jpg
-02.jpg | https://img.pacifiko.com/PROD/resize/0/1000x1000/0eb4094f-a9d9-4235-a740-f4ad00b4dd5e1719024719.jpg
-03.jpg | https://img.pacifiko.com/PROD/resize/0/1000x1000/5784b2bf-da98-455d-a6e7-583e9631b2051719024724.jpg
-04.jpg | https://cdn.pacifiko.com/image/catalog/copiar-enlace_share.png
-05.jpg | https://cdn.pacifiko.com/image/catalog/Ficohsa_logo.png

@@ -1,5 +1,0 @@
-01.jpg | https://img.pacifiko.com/PROD/resize/1/1000x1000/YTkwZDcxMG_645.jpg
-02.jpg | https://img.pacifiko.com/PROD/resize/1/1000x1000/YTkwZDcxMG_0_876.png
-03.jpg | https://img.pacifiko.com/PROD/resize/1/1000x1000/YTkwZDcxMG_1_431.png
-04.jpg | https://img.pacifiko.com/PROD/resize/1/1000x1000/YTkwZDcxMG_2_791.png
-05.jpg | https://img.pacifiko.com/PROD/resize/1/1000x1000/YTkwZDcxMG_3_356.png

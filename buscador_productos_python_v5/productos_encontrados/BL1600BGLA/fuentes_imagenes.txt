@@ -1,5 +1,0 @@
-01.jpg | https://www.panafoto.com/media/wysiwyg/svg/img-faq-venew.jpg
-02.jpg | https://www.panafoto.com/media/wysiwyg/svg/img-novedad-venew.jpg
-03.jpg | https://www.panafoto.com/media/wysiwyg/svg/img-blog-venew.jpg
-04.jpg | https://www.panafoto.com/media/wysiwyg/svg/img-beneficio-venew.jpg
-05.jpg | https://www.panafoto.com/media/wysiwyg/svg/img-credito-venew.jpg
