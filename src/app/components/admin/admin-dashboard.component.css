@@ -1181,3 +1181,142 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Theme sync with Home (dark mode) */
+:host-context(.dark-mode) .admin-container {
+  background: transparent;
+  color: var(--dm-text);
+}
+
+:host-context(.dark-mode) .tabs,
+:host-context(.dark-mode) .admin-content {
+  color: var(--dm-text);
+}
+
+:host-context(.dark-mode) .tab-btn {
+  background: var(--dm-surface);
+  border-color: var(--dm-border);
+  color: var(--dm-text);
+}
+
+:host-context(.dark-mode) .tab-btn.active,
+:host-context(.dark-mode) .tab-btn:hover {
+  background: #1f6fb2;
+  border-color: #1f6fb2;
+  color: #ffffff;
+}
+
+:host-context(.dark-mode) .pedido-toast,
+:host-context(.dark-mode) .dashboard-toolbar,
+:host-context(.dark-mode) .admin-filters,
+:host-context(.dark-mode) .form-section,
+:host-context(.dark-mode) .products-section,
+:host-context(.dark-mode) .categories-section,
+:host-context(.dark-mode) .table-view,
+:host-context(.dark-mode) .category-card,
+:host-context(.dark-mode) .pedido-detail-card,
+:host-context(.dark-mode) .pedidos-kpi,
+:host-context(.dark-mode) .select-group {
+  background: var(--dm-surface) !important;
+  border-color: var(--dm-border) !important;
+  color: var(--dm-text) !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+:host-context(.dark-mode) .csv-import-status,
+:host-context(.dark-mode) .import-hint,
+:host-context(.dark-mode) .csv-progress-bar,
+:host-context(.dark-mode) .category-chip,
+:host-context(.dark-mode) .product-images,
+:host-context(.dark-mode) .more-images,
+:host-context(.dark-mode) .pedido-detail-cell {
+  background: #15202b !important;
+  border-color: var(--dm-border) !important;
+  color: var(--dm-text) !important;
+}
+
+:host-context(.dark-mode) .admin-table thead th {
+  background: #1a2632;
+  color: var(--dm-text);
+  border-bottom-color: var(--dm-border);
+}
+
+:host-context(.dark-mode) .admin-table tbody td,
+:host-context(.dark-mode) .pedido-items-table th,
+:host-context(.dark-mode) .pedido-items-table td {
+  border-bottom-color: var(--dm-border);
+  color: var(--dm-text);
+}
+
+:host-context(.dark-mode) .search-section input[type="search"],
+:host-context(.dark-mode) .form-group input,
+:host-context(.dark-mode) .form-group select,
+:host-context(.dark-mode) .form-group textarea,
+:host-context(.dark-mode) .admin-table input,
+:host-context(.dark-mode) .admin-table select,
+:host-context(.dark-mode) .category-search,
+:host-context(.dark-mode) .pagination-controls button,
+:host-context(.dark-mode) .pagination button,
+:host-context(.dark-mode) .view-controls select,
+:host-context(.dark-mode) .view-controls button {
+  background: #101922 !important;
+  color: var(--dm-text) !important;
+  border-color: var(--dm-border) !important;
+}
+
+:host-context(.dark-mode) .form-group input:disabled,
+:host-context(.dark-mode) .form-group select:disabled,
+:host-context(.dark-mode) .form-group textarea:disabled {
+  background: #0e1620 !important;
+  color: #8da2b5 !important;
+}
+
+:host-context(.dark-mode) .dashboard-title h2,
+:host-context(.dark-mode) .dashboard-subtitle,
+:host-context(.dark-mode) .products-section h3,
+:host-context(.dark-mode) .categories-section h3,
+:host-context(.dark-mode) .form-section h3,
+:host-context(.dark-mode) .product-info h4,
+:host-context(.dark-mode) .category-info h4,
+:host-context(.dark-mode) .pedido-folio-title,
+:host-context(.dark-mode) .pedido-datos h4,
+:host-context(.dark-mode) .pedido-detail-grid h4,
+:host-context(.dark-mode) .product-id,
+:host-context(.dark-mode) .description,
+:host-context(.dark-mode) .no-description,
+:host-context(.dark-mode) .pedido-sub,
+:host-context(.dark-mode) .pedidos-kpi span,
+:host-context(.dark-mode) .pedidos-kpi strong,
+:host-context(.dark-mode) .pagination-controls span,
+:host-context(.dark-mode) .search-section small,
+:host-context(.dark-mode) .sku-line,
+:host-context(.dark-mode) .category-meta,
+:host-context(.dark-mode) .no-products,
+:host-context(.dark-mode) .no-categories,
+:host-context(.dark-mode) .no-image {
+  color: var(--dm-text) !important;
+}
+
+:host-context(.dark-mode) .csv-progress,
+:host-context(.dark-mode) .file-info,
+:host-context(.dark-mode) .text-muted,
+:host-context(.dark-mode) .url-index {
+  color: #9ab0c4 !important;
+}
+
+:host-context(.dark-mode) .btn-secondary,
+:host-context(.dark-mode) .csv-btn {
+  background: #1b2834;
+  border-color: var(--dm-border);
+  color: var(--dm-text);
+}
+
+:host-context(.dark-mode) .btn-secondary:hover,
+:host-context(.dark-mode) .csv-btn:hover {
+  background: #223546;
+}
+
+:host-context(.dark-mode) .pagination button.active {
+  background: #1f6fb2;
+  border-color: #1f6fb2;
+}
